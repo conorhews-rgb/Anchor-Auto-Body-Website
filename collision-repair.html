@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Collision Repair in Woburn, MA | Anchor Auto Body</title>
+<meta name="description" content="Complete collision repair in Woburn, MA since 1971. We restore every make and model to pre-accident condition, handle the insurance claim, and guarantee the work for as long as you own your car.">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Anchor Auto Body">
+<meta property="og:title" content="Collision Repair in Woburn, MA | Anchor Auto Body">
+<meta property="og:description" content="Complete collision repair in Woburn, MA since 1971. We restore every make and model to pre-accident condition, handle the insurance claim, and guarantee the work for as long as you own your car.">
+<meta property="og:image" content="assets/HONDA-4-scaled.jpg">
+<meta property="og:url" content="https://anchorautobodyrepair.com/collision-repair.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0D0E10;
+  --bg-2:#131417;
+  --surface:#191B1F;
+  --ink:#F5F3EE;
+  --muted:#B9B6AD;
+  --faint:#807D74;
+  --line:rgba(245,243,238,.08);
+  --line-strong:rgba(245,243,238,.18);
+  --accent:#2E86E8;
+  --accent-bright:#5CA8FF;
+  --accent-deep:#14477F;
+  --accent-glow:rgba(46,134,232,.28);
+  --gold:#E8B84B;
+  --gold-dark:#7A5E1C;
+  --radius:16px;
+  --pad-sec:clamp(90px,11vw,170px);
+  --ease-out:cubic-bezier(.19,1,.22,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Archivo",system-ui,-apple-system,sans-serif;
+  font-size:clamp(15px,.35vw + 14px,17px);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:clip;
+}
+img,svg,video,iframe{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+ul,ol{list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent-bright);outline-offset:3px;border-radius:4px}
+.skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--accent-deep);color:#fff;padding:12px 20px;border-radius:0 0 8px 0}
+.skip:focus{left:0}
+
+h1,h2,h3,h4{font-stretch:87%;letter-spacing:-.015em;line-height:1.06;text-wrap:balance}
+h1{font-size:clamp(2.8rem,8vw,5.4rem);font-weight:900}
+h2{font-size:clamp(2rem,4.6vw,3.3rem);font-weight:900}
+h3{font-size:clamp(1.15rem,2vw,1.45rem);font-weight:800;letter-spacing:-.01em}
+.kicker{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:.78rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--accent-bright);margin-bottom:18px;
+}
+.kicker::before{content:"";width:26px;height:2px;background:var(--accent);flex:none}
+.hl{
+  color:var(--accent-bright);
+  background-image:linear-gradient(var(--accent),var(--accent));
+  background-repeat:no-repeat;
+  background-position:0 94%;
+  background-size:calc(var(--hl-x,1)*100%) .09em;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+  padding-bottom:.06em;
+}
+.lead{color:var(--muted);font-size:clamp(1.02rem,1.5vw,1.22rem);max-width:60ch}
+
+.wrap{width:min(1180px,calc(100% - clamp(32px,6vw,96px)));margin-inline:auto}
+.sec{padding-block:var(--pad-sec)}
+.sec-alt{background:var(--bg-2);border-block:1px solid var(--line)}
+.sec-head{max-width:720px;margin-bottom:clamp(40px,6vw,70px)}
+.sec-head p{margin-top:16px}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  font-weight:800;font-stretch:92%;font-size:.98rem;letter-spacing:.01em;
+  padding:16px 30px;border-radius:999px;border:1px solid transparent;
+  transition:background .3s var(--ease-out),border-color .3s var(--ease-out),box-shadow .3s var(--ease-out),color .3s var(--ease-out);
+  will-change:transform;
+}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 8px 30px var(--accent-glow)}
+.btn-primary:hover{background:var(--accent-bright);box-shadow:0 10px 40px var(--accent-glow)}
+.btn-ghost{border-color:var(--line-strong);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--accent-bright);color:var(--accent-bright)}
+.btn-onaccent{background:#fff;color:var(--accent-deep)}
+.btn-onaccent:hover{background:var(--ink)}
+.btn-ghost-onaccent{border-color:rgba(255,255,255,.5);color:#fff}
+.btn-ghost-onaccent:hover{border-color:#fff}
+
+/* ---------- header ---------- */
+.site-header{
+  position:fixed;inset:0 0 auto 0;z-index:100;
+  transition:background .35s var(--ease-out),border-color .35s var(--ease-out),backdrop-filter .35s var(--ease-out);
+  border-bottom:1px solid transparent;
+}
+.site-header.scrolled{
+  background:rgba(13,14,16,.82);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border-bottom-color:var(--line);
+}
+.header-in{display:flex;align-items:center;gap:26px;height:78px}
+.logo{flex:none;margin-right:auto}
+.logo img{height:44px;width:auto}
+.nav{display:flex;align-items:center;gap:4px}
+.nav > li{position:relative}
+.nav a,.nav-svc-btn{
+  display:flex;align-items:center;gap:6px;padding:10px 13px;border-radius:8px;
+  font-weight:600;font-size:.94rem;color:var(--muted);
+  transition:color .25s;
+}
+.nav a:hover,.nav-svc-btn:hover,.nav a[aria-current="page"]{color:var(--ink)}
+.nav a[aria-current="page"]{color:var(--accent-bright)}
+.nav-svc-btn .caret{width:10px;height:10px;flex:none;transition:transform .3s var(--ease-out)}
+.svc-menu{
+  position:absolute;top:calc(100% + 10px);left:50%;translate:-50% 0;min-width:250px;
+  background:var(--surface);border:1px solid var(--line-strong);border-radius:14px;
+  padding:8px;box-shadow:0 24px 60px rgba(0,0,0,.55);
+  opacity:0;visibility:hidden;transform:translateY(8px);
+  transition:opacity .28s var(--ease-out),transform .28s var(--ease-out),visibility 0s .28s;
+}
+.nav > li:hover > .svc-menu,
+.nav > li:focus-within > .svc-menu,
+.svc-menu.open{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+.nav > li:hover .caret,.nav > li:focus-within .caret{transform:rotate(180deg)}
+.svc-menu a{display:block;padding:11px 14px;border-radius:9px;font-size:.92rem;color:var(--muted)}
+.svc-menu a:hover{background:rgba(255,255,255,.05);color:var(--ink)}
+.head-tel{font-weight:800;font-size:.96rem;white-space:nowrap;color:var(--ink)}
+.head-tel:hover{color:var(--accent-bright)}
+.head-cta{padding:12px 22px;font-size:.9rem}
+.nav-toggle{display:none;width:44px;height:44px;flex:none;border-radius:10px;border:1px solid var(--line-strong);position:relative}
+.nav-toggle span{position:absolute;left:12px;right:12px;height:2px;background:var(--ink);border-radius:2px;transition:transform .3s var(--ease-out),opacity .2s;top:50%}
+.nav-toggle span:nth-child(1){translate:0 -7px}
+.nav-toggle span:nth-child(3){translate:0 5px}
+.nav-toggle[aria-expanded="true"] span:nth-child(1){translate:0 -1px;transform:rotate(45deg)}
+.nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] span:nth-child(3){translate:0 -1px;transform:rotate(-45deg)}
+
+@media (max-width:960px){
+  .head-tel{display:none}
+  .nav-toggle{display:block}
+  .nav{
+    position:fixed;top:78px;left:0;right:0;bottom:0;z-index:99;
+    flex-direction:column;align-items:stretch;gap:2px;
+    background:rgba(13,14,16,.97);padding:18px clamp(20px,6vw,40px) 40px;
+    overflow-y:auto;
+    display:none;
+  }
+  .nav.open{display:flex}
+  .nav a,.nav-svc-btn{width:100%;padding:15px 8px;font-size:1.15rem;border-bottom:1px solid var(--line);border-radius:0;justify-content:space-between}
+  .svc-menu{position:static;translate:none;min-width:0;background:none;border:0;box-shadow:none;padding:0 0 0 16px;
+    opacity:1;transform:none;visibility:hidden;display:none;transition:none}
+  .svc-menu.open{display:block;visibility:visible}
+  .nav > li:hover > .svc-menu{visibility:hidden;display:none}
+  .nav > li:hover > .svc-menu.open,.nav > li:focus-within > .svc-menu.open{visibility:visible;display:block}
+}
+@media (max-width:520px){.head-cta{display:none}.logo img{height:38px}}
+
+/* ---------- cards ---------- */
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  transition:transform .45s var(--ease-out),border-color .45s var(--ease-out),box-shadow .45s var(--ease-out);
+}
+@media (hover:hover){
+  .card:hover{transform:translateY(-6px);border-color:var(--accent);box-shadow:0 18px 50px var(--accent-glow)}
+}
+
+/* ---------- stars ---------- */
+.stars{display:inline-flex;gap:3px;color:var(--gold)}
+.stars svg{width:16px;height:16px;fill:currentColor}
+
+/* ---------- page hero (subpages) ---------- */
+.page-hero{position:relative;padding:calc(78px + clamp(70px,9vw,130px)) 0 clamp(70px,9vw,110px);overflow:clip}
+.page-hero .bg{position:absolute;inset:0;z-index:-1}
+.page-hero .bg img{width:100%;height:100%;object-fit:cover;opacity:.35}
+.page-hero .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,14,16,.55),var(--bg) 92%)}
+.crumbs{display:flex;flex-wrap:wrap;gap:8px;font-size:.85rem;color:var(--faint);margin-bottom:22px}
+.crumbs a{color:var(--muted)}
+.crumbs a:hover{color:var(--accent-bright)}
+.crumbs li:not(:last-child)::after{content:"/";margin-left:8px;color:var(--faint)}
+.crumbs [aria-current]{color:var(--ink)}
+.page-hero h1{max-width:16ch}
+.page-hero .lead{margin:22px 0 34px}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:14px}
+
+/* ---------- CTA band ---------- */
+.cta-band{background:linear-gradient(115deg,var(--accent-deep),var(--accent) 70%,var(--accent-bright));position:relative;overflow:clip}
+.cta-band::before{content:"";position:absolute;inset:0;background:radial-gradient(700px 300px at 85% 20%,rgba(255,255,255,.14),transparent 70%)}
+.cta-band .wrap{position:relative;text-align:center;padding-block:clamp(70px,9vw,120px)}
+.cta-band h2{color:#fff;max-width:22ch;margin-inline:auto}
+.cta-band p{color:rgba(255,255,255,.85);max-width:52ch;margin:18px auto 34px}
+.cta-band .hero-ctas{justify-content:center}
+.cta-band ::selection{background:#fff;color:var(--accent-deep)}
+
+/* ---------- footer ---------- */
+.site-footer{background:var(--bg-2);border-top:1px solid var(--line);padding:clamp(60px,8vw,100px) 0 0}
+.foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1.2fr;gap:clamp(28px,4vw,56px)}
+.foot-grid h3{font-size:.82rem;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:18px;font-weight:700}
+.foot-grid li{margin-bottom:10px;font-size:.94rem}
+.foot-grid a{color:var(--muted)}
+.foot-grid a:hover{color:var(--accent-bright)}
+.foot-brand img{height:52px;width:auto;margin-bottom:16px}
+.foot-brand p{color:var(--muted);font-size:.94rem;max-width:34ch}
+.foot-hours li{display:flex;justify-content:space-between;gap:12px;color:var(--muted);border-bottom:1px dashed var(--line);padding-bottom:8px}
+.foot-hours span:last-child{color:var(--ink);font-weight:600;white-space:nowrap}
+.foot-contact li{color:var(--muted);display:flex;gap:10px;align-items:flex-start}
+.foot-contact svg{width:16px;height:16px;flex:none;margin-top:4px;color:var(--accent-bright)}
+.foot-map{margin-top:clamp(40px,6vw,64px);border-top:1px solid var(--line)}
+.foot-map iframe{width:100%;height:320px;border:0;filter:invert(90%) hue-rotate(180deg) saturate(.4) brightness(.9) contrast(.92)}
+.foot-base{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;padding:22px 0;border-top:1px solid var(--line);color:var(--faint);font-size:.85rem}
+.socials{display:flex;gap:10px}
+.socials a{width:38px;height:38px;border:1px solid var(--line-strong);border-radius:50%;display:grid;place-items:center;color:var(--muted);transition:border-color .3s,color .3s}
+.socials a:hover{border-color:var(--accent-bright);color:var(--accent-bright)}
+.socials svg{width:16px;height:16px;fill:currentColor}
+@media (max-width:900px){.foot-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.foot-grid{grid-template-columns:1fr}}
+
+/* ---------- faq accordion ---------- */
+.faq{max-width:820px}
+.faq-item{border-bottom:1px solid var(--line)}
+.faq-q{width:100%;display:flex;justify-content:space-between;align-items:center;gap:20px;text-align:left;padding:24px 4px;font-weight:800;font-stretch:90%;font-size:clamp(1rem,1.6vw,1.15rem);transition:color .25s}
+.faq-q:hover{color:var(--accent-bright)}
+.faq-q .plus{flex:none;width:22px;height:22px;position:relative}
+.faq-q .plus::before,.faq-q .plus::after{content:"";position:absolute;inset:auto;left:50%;top:50%;translate:-50% -50%;background:var(--accent-bright);border-radius:2px;transition:transform .35s var(--ease-out)}
+.faq-q .plus::before{width:14px;height:2px}
+.faq-q .plus::after{width:2px;height:14px}
+.faq-q[aria-expanded="true"] .plus::after{transform:rotate(90deg)}
+.faq-a{overflow:hidden;height:0}
+.faq-a[hidden]{display:block}
+.faq-a p{color:var(--muted);padding:0 4px 26px;max-width:60ch}
+
+/* ---------- widget shell ---------- */
+.widget{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(20px,3vw,34px);overflow:clip}
+.widget-note{margin-top:14px;font-size:.85rem;color:var(--faint)}
+.chip-row{display:flex;flex-wrap:wrap;gap:10px}
+.chip{border:1px solid var(--line-strong);border-radius:999px;padding:10px 18px;font-size:.9rem;font-weight:700;color:var(--muted);transition:border-color .3s,color .3s,background .3s}
+.chip:hover{border-color:var(--accent-bright);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--accent-deep);border-color:var(--accent);color:#fff}
+
+/* ---------- split feature rows ---------- */
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,6vw,80px);align-items:center}
+.feat-grid figure{border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
+.feat-grid img{width:100%;height:100%;object-fit:cover}
+.feat-copy p{color:var(--muted);margin-top:16px}
+.ticks{margin-top:22px;display:grid;gap:10px}
+.ticks li{display:flex;gap:12px;color:var(--muted);font-size:.96rem}
+.ticks li::before{content:"\\2713";color:var(--accent-bright);font-weight:900;flex:none}
+@media (max-width:860px){.feat-grid{grid-template-columns:1fr}}
+
+/* ---------- mobile call bar ---------- */
+.call-bar{
+  position:fixed;left:0;right:0;bottom:0;z-index:90;
+  display:none;align-items:center;justify-content:center;gap:10px;
+  background:var(--accent);color:#fff;font-weight:800;font-size:1.02rem;
+  padding:15px 16px calc(15px + env(safe-area-inset-bottom));
+  transform:translateY(110%);transition:transform .45s var(--ease-out);
+  box-shadow:0 -8px 30px rgba(0,0,0,.45);
+}
+.call-bar svg{width:18px;height:18px;fill:currentColor}
+.call-bar.show{transform:none}
+@media (max-width:760px){.call-bar{display:flex}}
+
+/* ---------- page styles ---------- */
+
+/* before/after slider */
+.ba{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);aspect-ratio:4/3;max-width:860px;touch-action:none;user-select:none;-webkit-user-select:none}
+.ba img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.ba .img-before{clip-path:inset(0 calc(100% - var(--ba,50%)) 0 0)}
+.ba-handle{position:absolute;top:0;bottom:0;left:var(--ba,50%);width:0;cursor:ew-resize}
+.ba-handle::before{content:"";position:absolute;top:0;bottom:0;left:-1.5px;width:3px;background:var(--accent-bright);box-shadow:0 0 18px var(--accent-glow)}
+.ba-grip{position:absolute;top:50%;left:0;translate:-50% -50%;width:52px;height:52px;border-radius:50%;background:var(--accent);display:grid;place-items:center;color:#fff;box-shadow:0 6px 24px rgba(0,0,0,.5)}
+.ba-grip svg{width:24px;height:24px}
+.ba-label{position:absolute;top:14px;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:6px 11px;border-radius:6px;pointer-events:none}
+.ba-label.l-before{left:14px;background:rgba(13,14,16,.75);color:var(--ink)}
+.ba-label.l-after{right:14px;background:var(--accent);color:#fff}
+.dmg-list{margin-top:26px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.dmg-list li{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var(--bg-2)}
+.dmg-list b{display:block;margin-bottom:4px;font-stretch:90%}
+.dmg-list span{color:var(--muted);font-size:.9rem}
+@media (max-width:760px){.dmg-list{grid-template-columns:1fr}}
+
+</style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "AutoBodyShop",
+   "@id": "https://anchorautobodyrepair.com/#shop",
+   "name": "Anchor Auto Body",
+   "telephone": "+1-781-935-0041",
+   "url": "https://anchorautobodyrepair.com/",
+   "image": "https://anchorautobodyrepair.com/assets/shop-1.jpg",
+   "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "3 Breed Avenue",
+    "addressLocality": "Woburn",
+    "addressRegion": "MA",
+    "postalCode": "01801",
+    "addressCountry": "US"
+   }
+  },
+  {
+   "@type": "Service",
+   "serviceType": "Collision Repair",
+   "description": "Full collision and accident damage repair for foreign and domestic cars, trucks and SUVs in Woburn, MA.",
+   "provider": {
+    "@id": "https://anchorautobodyrepair.com/#shop"
+   },
+   "areaServed": "Woburn, MA and 29 surrounding towns",
+   "url": "https://anchorautobodyrepair.com/collision-repair.html"
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "Will you find damage the insurance appraiser missed?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Very often, yes. Surface photos miss crushed brackets, bent reinforcements and kinked rails. We tear down the damaged area before repairs begin and negotiate a supplement with your carrier for anything hidden underneath."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Do you use original manufacturer parts?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Whenever your policy and the parts market allow it, yes. We fit and align every panel to factory gaps regardless of the part source, and we will always tell you exactly what is going on your car."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Can you tow my car in after an accident?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Call 781-935-0041 and we will arrange towing straight to our shop at 3 Breed Avenue, then start your claim while the car is on the lift."
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="wrap header-in">
+    <a class="logo" href="index.html" aria-label="Anchor Auto Body home">
+      <img src="assets/logo.png" alt="Anchor Auto Body, established 1971" width="582" height="231">
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav" id="site-nav">
+      <li><a href="index.html" data-nav="home">Home</a></li>
+      <li class="has-menu">
+        <button class="nav-svc-btn" aria-expanded="false" aria-controls="svc-menu">
+          Services
+          <svg class="caret" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+        <ul class="svc-menu" id="svc-menu">
+          <li><a href="collision-repair.html">Collision Repair</a></li>
+          <li><a href="auto-painting.html">Auto Painting &amp; Color Match</a></li>
+          <li><a href="paintless-dent-repair.html">Paintless Dent Repair</a></li>
+          <li><a href="frame-structural.html">Frame &amp; Structural</a></li>
+          <li><a href="bumper-plastic-repair.html">Bumper &amp; Plastic Repair</a></li>
+          <li><a href="detailing-restoration.html">Detailing &amp; Restoration</a></li>
+        </ul>
+      </li>
+      <li><a href="index.html#work" data-nav="work">Our Work</a></li>
+      <li><a href="index.html#insurance" data-nav="insurance">Insurance</a></li>
+      <li><a href="index.html#about" data-nav="about">About</a></li>
+      <li><a href="index.html#contact" data-nav="contact">Contact</a></li>
+    </ul>
+    <a class="head-tel" href="tel:+17819350041">781-935-0041</a>
+    <a class="btn btn-primary head-cta" href="index.html#estimate" data-magnetic>Free Estimate</a>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="page-hero">
+  <div class="bg"><img src="assets/HONDA-1-scaled.jpg" alt="" width="1600" height="1200" fetchpriority="high"></div>
+  <div class="wrap">
+    <nav aria-label="Breadcrumb"><ol class="crumbs">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#services">Services</a></li>
+      <li aria-current="page">Collision Repair</li>
+    </ol></nav>
+    <h1>Collision repair that <span class="hl">erases the accident</span></h1>
+    <p class="lead">From a parking lot fender bender to a highway hit, we repair every make and model back to pre-accident condition and we handle your insurance claim from the first call to the last signature.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="index.html#estimate" data-magnetic>Get a Free Estimate</a>
+      <a class="btn btn-ghost" href="tel:+17819350041">Call 781-935-0041</a>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <p class="kicker">See it yourself</p>
+      <h2>Drag the line, watch the <span class="hl">accident disappear</span></h2>
+      <p class="lead">This Honda Accord came to us off a tow truck with front end collision damage. Slide the divider to compare arrival day with delivery day. Same car, same photos, our floor.</p>
+    </div>
+    <div class="widget" data-reveal>
+      <div class="ba" id="ba" style="--ba:50%">
+        <img class="img-after" src="assets/HONDA-4-scaled.jpg" alt="Honda Accord after collision repair at Anchor Auto Body" width="1600" height="1200">
+        <img class="img-before" src="assets/HONDA-1-scaled.jpg" alt="The same Honda Accord before repair, with hood and bumper damage" width="1600" height="1200">
+        <span class="ba-label l-before">Before</span>
+        <span class="ba-label l-after">After</span>
+        <div class="ba-handle" id="ba-handle" role="slider" tabindex="0" aria-label="Compare before and after repair" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50 percent before photo shown">
+          <span class="ba-grip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg></span>
+        </div>
+      </div>
+      <p class="widget-note">Drag the handle or use the arrow keys. This is a real repair completed at 3 Breed Avenue.</p>
+      <ul class="dmg-list">
+        <li data-reveal><b>What it needed</b><span>Hood, bumper cover, grille and both headlamps replaced, radiator support pulled to spec.</span></li>
+        <li data-reveal><b>What we matched</b><span>Still Night Pearl blue, computer matched and blended into both fenders.</span></li>
+        <li data-reveal><b>What it cost the owner</b><span>Nothing beyond the deductible. We negotiated the full supplement with the carrier.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-alt">
+  <div class="wrap">
+    <div class="feat-grid">
+      <figure data-reveal><img src="assets/cayenne-1-scaled.jpg" alt="Porsche Cayenne with collision damage waiting for teardown" width="1600" height="1200" loading="lazy"></figure>
+      <div class="feat-copy" data-reveal>
+        <p class="kicker">Beneath the surface</p>
+        <h2>The damage you can see is <span class="hl">half the story</span></h2>
+        <p>A crumpled fender is easy. What matters is what is behind it: bent reinforcements, crushed crash absorbers, tweaked rails and knocked-out sensor brackets. We tear down every damaged area before bodywork starts, document what we find, and get it on the insurance company's tab, not yours.</p>
+        <ul class="ticks">
+          <li>Full teardown and photo documentation before repairs begin</li>
+          <li>Supplements negotiated directly with your carrier's appraiser</li>
+          <li>Structural points verified on our computerized measuring system</li>
+          <li>Safety systems and sensors checked before delivery</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <p class="kicker">Questions</p>
+      <h2>Collision repair, <span class="hl">answered straight</span></h2>
+    </div>
+    <div class="faq" data-reveal>
+<div class="faq-item"><h3><button class="faq-q" aria-expanded="false" aria-controls="col-faq-1">Will you find damage the insurance appraiser missed?<span class="plus" aria-hidden="true"></span></button></h3><div class="faq-a" id="col-faq-1" hidden><p>Very often, yes. Surface photos miss crushed brackets, bent reinforcements and kinked rails. We tear down the damaged area before repairs begin and negotiate a supplement with your carrier for anything hidden underneath.</p></div></div>
+<div class="faq-item"><h3><button class="faq-q" aria-expanded="false" aria-controls="col-faq-2">Do you use original manufacturer parts?<span class="plus" aria-hidden="true"></span></button></h3><div class="faq-a" id="col-faq-2" hidden><p>Whenever your policy and the parts market allow it, yes. We fit and align every panel to factory gaps regardless of the part source, and we will always tell you exactly what is going on your car.</p></div></div>
+<div class="faq-item"><h3><button class="faq-q" aria-expanded="false" aria-controls="col-faq-3">Can you tow my car in after an accident?<span class="plus" aria-hidden="true"></span></button></h3><div class="faq-a" id="col-faq-3" hidden><p>Yes. Call 781-935-0041 and we will arrange towing straight to our shop at 3 Breed Avenue, then start your claim while the car is on the lift.</p></div></div>
+</div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="wrap" data-reveal>
+    <h2>Been in an accident? Start here</h2>
+    <p>One call gets your car towed in, your claim started and a rental arranged. Estimates are free and in person at 3 Breed Avenue in Woburn.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-onaccent" href="tel:+17819350041" data-magnetic>Call 781-935-0041</a>
+      <a class="btn btn-ghost-onaccent" href="index.html#estimate">Free Estimate</a>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="site-footer" id="contact">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <img src="assets/logo.png" alt="Anchor Auto Body" width="582" height="231" loading="lazy">
+        <p>Family owned collision repair in Woburn since 1971. One of the largest independently owned body shops in the area, and we guarantee our work for as long as you own your vehicle.</p>
+      </div>
+      <div>
+        <h3>Services</h3>
+        <ul>
+          <li><a href="collision-repair.html">Collision Repair</a></li>
+          <li><a href="auto-painting.html">Auto Painting &amp; Color Match</a></li>
+          <li><a href="paintless-dent-repair.html">Paintless Dent Repair</a></li>
+          <li><a href="frame-structural.html">Frame &amp; Structural</a></li>
+          <li><a href="bumper-plastic-repair.html">Bumper &amp; Plastic Repair</a></li>
+          <li><a href="detailing-restoration.html">Detailing &amp; Restoration</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Hours</h3>
+        <ul class="foot-hours">
+          <li><span>Mon to Thu</span><span>7:30 am to 5:00 pm</span></li>
+          <li><span>Friday</span><span>7:30 am to 2:00 pm</span></li>
+          <li><span>Sat &amp; Sun</span><span>Closed</span></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Contact</h3>
+        <ul class="foot-contact">
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>
+            <span>3 Breed Avenue<br>Woburn, MA 01801</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .57 3.6 1 1 0 0 1-.25 1Z"/></svg>
+            <a href="tel:+17819350041">781-935-0041</a>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm8 7L4 6v12h16V6Z"/></svg>
+            <a href="mailto:anchorautobody@comcast.net">anchorautobody@comcast.net</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot-map">
+    <iframe src="https://www.google.com/maps?q=3+Breed+Avenue,+Woburn,+MA+01801&amp;output=embed" title="Map to Anchor Auto Body, 3 Breed Avenue, Woburn, MA" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+  </div>
+  <div class="wrap">
+    <div class="foot-base">
+      <p>&copy; 2026 Anchor Auto Body of Woburn. All rights reserved.</p>
+      <div class="socials">
+        <a href="https://www.facebook.com/anchorautobodyrepair/" aria-label="Anchor Auto Body on Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-7h2.4l.4-3h-2.8V9.1c0-.9.3-1.5 1.6-1.5h1.3V4.9c-.3 0-1.1-.1-2.1-.1-2.1 0-3.6 1.3-3.6 3.7V11H8.3v3h2.4v7Z"/></svg></a>
+        <a href="https://www.instagram.com/anchorautobody/" aria-label="Anchor Auto Body on Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.8A3.2 3.2 0 1 0 12 15.2 3.2 3.2 0 0 0 12 8.8Zm0-2.1a5.3 5.3 0 1 1 0 10.6 5.3 5.3 0 0 1 0-10.6Zm6.8-.3a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0ZM12 4.6c-2.4 0-2.7 0-3.7.06a5 5 0 0 0-1.7.3 3.4 3.4 0 0 0-1.9 1.9 5 5 0 0 0-.3 1.7C4.3 9.6 4.3 9.9 4.3 12.3s0 2.7.06 3.6a5 5 0 0 0 .3 1.7 3.4 3.4 0 0 0 1.9 1.9 5 5 0 0 0 1.7.3c1 .06 1.3.06 3.7.06s2.7 0 3.7-.06a5 5 0 0 0 1.7-.3 3.4 3.4 0 0 0 1.9-1.9 5 5 0 0 0 .3-1.7c.06-1 .06-1.2.06-3.6s0-2.7-.06-3.7a5 5 0 0 0-.3-1.7 3.4 3.4 0 0 0-1.9-1.9 5 5 0 0 0-1.7-.3c-1-.06-1.3-.06-3.7-.06Z" transform="translate(0 -.3)"/></svg></a>
+        <a href="https://www.linkedin.com/company/anchor-auto-body-woburn/" aria-label="Anchor Auto Body on LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.9 8.6H4V20h2.9ZM5.4 7.4a1.7 1.7 0 1 0 0-3.4 1.7 1.7 0 0 0 0 3.4ZM20 13.6c0-3.2-1.7-4.7-4-4.7a3.4 3.4 0 0 0-3.1 1.7V8.6H10V20h2.9v-6c0-1.3.6-2.6 2.1-2.6s2.1 1.3 2.1 2.6v6H20Z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+<a class="call-bar" href="tel:+17819350041" aria-label="Call Anchor Auto Body at 781-935-0041">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .57 3.6 1 1 0 0 1-.25 1Z"/></svg>
+  Tap to Call 781-935-0041
+</a>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script>
+/* shared behavior: runs on every page */
+var hasGSAP = typeof window.gsap !== "undefined";
+var RM = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var ANIMATE = hasGSAP && !RM;
+if (hasGSAP && window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+if (hasGSAP && window.SplitText) gsap.registerPlugin(SplitText);
+
+(function () {
+  var header = document.querySelector(".site-header");
+  var onScroll = function () {
+    header.classList.toggle("scrolled", window.scrollY > 24);
+    var bar = document.querySelector(".call-bar");
+    if (bar) bar.classList.toggle("show", window.scrollY > window.innerHeight * 0.5);
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* current page in nav */
+  var page = location.pathname.split("/").pop() || "index.html";
+  document.querySelectorAll(".nav a, .svc-menu a").forEach(function (a) {
+    var href = a.getAttribute("href").split("#")[0];
+    if (href === page && page !== "index.html") a.setAttribute("aria-current", "page");
+    if (page === "index.html" && a.dataset.nav === "home") a.setAttribute("aria-current", "page");
+  });
+
+  /* mobile nav */
+  var toggle = document.querySelector(".nav-toggle");
+  var nav = document.getElementById("site-nav");
+  toggle.addEventListener("click", function () {
+    var open = nav.classList.toggle("open");
+    toggle.setAttribute("aria-expanded", String(open));
+    document.documentElement.style.overflow = open ? "hidden" : "";
+  });
+
+  /* services dropdown: click toggles (mobile + keyboard); hover handled in CSS */
+  var svcBtn = document.querySelector(".nav-svc-btn");
+  var svcMenu = document.getElementById("svc-menu");
+  svcBtn.addEventListener("click", function () {
+    var open = svcMenu.classList.toggle("open");
+    svcBtn.setAttribute("aria-expanded", String(open));
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && svcMenu.classList.contains("open")) {
+      svcMenu.classList.remove("open");
+      svcBtn.setAttribute("aria-expanded", "false");
+      svcBtn.focus();
+    }
+  });
+})();
+
+/* scroll reveals: with GSAP the elements start hidden and rise in; otherwise they stay visible */
+(function () {
+  var items = gsapArray(document.querySelectorAll("[data-reveal]"));
+  if (!items.length) return;
+  if (!ANIMATE || !window.ScrollTrigger) return; /* static fallback: leave as-is */
+  gsap.set(items, { autoAlpha: 0, y: 34 });
+  ScrollTrigger.batch(items, {
+    start: "top 88%",
+    once: true,
+    onEnter: function (batch) {
+      gsap.to(batch, { autoAlpha: 1, y: 0, duration: 1.1, ease: "expo.out", stagger: 0.09, overwrite: true });
+    }
+  });
+})();
+
+/* .hl underline draws in on scroll */
+(function () {
+  var hls = gsapArray(document.querySelectorAll(".hl"));
+  if (!hls.length || !ANIMATE || !window.ScrollTrigger) return;
+  hls.forEach(function (el) {
+    el.style.setProperty("--hl-x", "0");
+    ScrollTrigger.create({
+      trigger: el, start: "top 85%", once: true,
+      onEnter: function () {
+        gsap.to(el, { "--hl-x": 1, duration: 1, ease: "expo.inOut", delay: 0.35 });
+      }
+    });
+  });
+})();
+
+/* magnetic buttons: desktop fine pointers only */
+(function () {
+  if (!ANIMATE) return;
+  if (!window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
+  gsapArray(document.querySelectorAll("[data-magnetic]")).forEach(function (el) {
+    var xTo = gsap.quickTo(el, "x", { duration: 0.5, ease: "power3.out" });
+    var yTo = gsap.quickTo(el, "y", { duration: 0.5, ease: "power3.out" });
+    el.addEventListener("mousemove", function (e) {
+      var r = el.getBoundingClientRect();
+      xTo((e.clientX - (r.left + r.width / 2)) * 0.3);
+      yTo((e.clientY - (r.top + r.height / 2)) * 0.3);
+    });
+    el.addEventListener("mouseleave", function () { xTo(0); yTo(0); });
+  });
+})();
+
+function gsapArray(nl) { return Array.prototype.slice.call(nl); }
+
+/* FAQ accordion: one open at a time */
+(function () {
+  var faqs = gsapArray(document.querySelectorAll(".faq-item"));
+  if (!faqs.length) return;
+  faqs.forEach(function (item) {
+    var btn = item.querySelector(".faq-q");
+    var panel = item.querySelector(".faq-a");
+    btn.addEventListener("click", function () {
+      var isOpen = btn.getAttribute("aria-expanded") === "true";
+      faqs.forEach(function (other) {
+        var ob = other.querySelector(".faq-q");
+        var op = other.querySelector(".faq-a");
+        var shouldOpen = other === item && !isOpen;
+        ob.setAttribute("aria-expanded", String(shouldOpen));
+        if (ANIMATE) {
+          gsap.to(op, {
+            height: shouldOpen ? "auto" : 0,
+            duration: 0.55, ease: "expo.out", overwrite: true,
+            onStart: function () { if (shouldOpen) op.hidden = false; },
+            onComplete: function () { if (!shouldOpen) op.hidden = true; }
+          });
+        } else {
+          op.hidden = !shouldOpen;
+          op.style.height = shouldOpen ? "auto" : "0";
+        }
+      });
+    });
+  });
+})();
+
+/* ---------- page behavior ---------- */
+
+/* before/after slider */
+(function () {
+  var ba = document.getElementById("ba");
+  if (!ba) return;
+  var handle = document.getElementById("ba-handle");
+  var val = 50;
+  var sweep = null;
+  function stopSweep() { if (sweep) { sweep.kill(); sweep = null; ba.style.setProperty("--ba", val + "%"); } }
+  function set(v, animate) {
+    stopSweep();
+    val = Math.max(0, Math.min(100, v));
+    if (animate && ANIMATE) {
+      gsap.to(ba, { "--ba": val + "%", duration: 0.4, ease: "power2.out", overwrite: true });
+    } else {
+      ba.style.setProperty("--ba", val + "%");
+    }
+    handle.style.left = "var(--ba)";
+    handle.setAttribute("aria-valuenow", String(Math.round(val)));
+    handle.setAttribute("aria-valuetext", Math.round(val) + " percent before photo shown");
+  }
+  function fromEvent(e) {
+    var r = ba.getBoundingClientRect();
+    var x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+    set((x / r.width) * 100, false);
+  }
+  var dragging = false;
+  ba.addEventListener("pointerdown", function (e) { dragging = true; ba.setPointerCapture(e.pointerId); fromEvent(e); });
+  ba.addEventListener("pointermove", function (e) { if (dragging) fromEvent(e); });
+  ba.addEventListener("pointerup", function () { dragging = false; });
+  ba.addEventListener("pointercancel", function () { dragging = false; });
+  handle.addEventListener("keydown", function (e) {
+    var step = e.shiftKey ? 10 : 4;
+    if (e.key === "ArrowLeft" || e.key === "ArrowDown") { set(val - step, true); e.preventDefault(); }
+    if (e.key === "ArrowRight" || e.key === "ArrowUp") { set(val + step, true); e.preventDefault(); }
+    if (e.key === "Home") { set(0, true); e.preventDefault(); }
+    if (e.key === "End") { set(100, true); e.preventDefault(); }
+  });
+  /* intro sweep so visitors notice it is interactive */
+  if (ANIMATE && window.ScrollTrigger) {
+    ScrollTrigger.create({
+      trigger: ba, start: "top 75%", once: true,
+      onEnter: function () {
+        if (sweep !== null || val !== 50) return;
+        sweep = gsap.fromTo(ba, { "--ba": "12%" }, { "--ba": "50%", duration: 1.6, ease: "expo.inOut",
+          onComplete: function () { sweep = null; } });
+      }
+    });
+  }
+})();
+
+</script>
+</body>
+</html>
