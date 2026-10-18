@@ -276,9 +276,22 @@ h3{font-size:clamp(1.15rem,2vw,1.45rem);font-weight:800;letter-spacing:-.01em}
 /* swirl removal widget */
 .polish-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(22px,3.5vw,40px);align-items:center}
 .polish-stage{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);aspect-ratio:4/3}
-.polish-stage img{width:100%;height:100%;object-fit:cover}
-.swirls{position:absolute;inset:0;pointer-events:none;opacity:1;mix-blend-mode:screen}
-.haze{position:absolute;inset:0;pointer-events:none;background:rgba(160,160,160,.16);backdrop-filter:blur(.4px)}
+.polish-stage img{display:block}
+.polish-base{width:100%;height:100%;object-fit:cover}
+/* the swirled paint layer only covers the painted body panels; polishing wipes it away left to right */
+.polish-dmg,.polish-pad{position:absolute;left:2.688%;top:2.25%;width:94.625%;height:94.917%;pointer-events:none}
+.polish-dmg{
+  --p:-8%;
+  -webkit-mask-image:linear-gradient(90deg,transparent calc(var(--p) - 7%),#000 calc(var(--p) + 7%));
+  mask-image:linear-gradient(90deg,transparent calc(var(--p) - 7%),#000 calc(var(--p) + 7%));
+}
+.polish-pad{
+  opacity:0;transition:opacity .35s;
+  background:linear-gradient(90deg,transparent calc(var(--p) - 6%),rgba(255,255,255,.34) var(--p),transparent calc(var(--p) + 6%));
+  -webkit-mask-image:url("assets/detail/honda-swirled.webp");mask-image:url("assets/detail/honda-swirled.webp");
+  -webkit-mask-size:100% 100%;mask-size:100% 100%;
+}
+.polish-stage.is-working .polish-pad{opacity:1}
 .polish-stage .state-tag{position:absolute;top:14px;left:14px;background:rgba(13,14,16,.78);border:1px solid var(--line-strong);padding:7px 12px;border-radius:8px;font-size:.8rem;font-weight:700}
 .polish-ctl{margin-top:0}
 .polish-ctl label{display:block;font-weight:800;font-stretch:90%;margin-bottom:14px}
@@ -418,29 +431,13 @@ h3{font-size:clamp(1.15rem,2vw,1.45rem);font-weight:800;letter-spacing:-.01em}
     <div class="sec-head" data-reveal>
       <p class="kicker">Paint correction</p>
       <h2>Polish the swirls away, <span class="hl">right here</span></h2>
-      <p class="lead">Years of automatic car washes leave clearcoat full of fine circular scratches that dull the shine. Drag the polisher slider and watch what machine correction does to them.</p>
+      <p class="lead">Years of automatic car washes leave clearcoat full of fine circular scratches that dull the shine. Drag the polisher across this Accord and watch machine correction take them out of the paint.</p>
     </div>
     <div class="widget polish-grid" data-reveal>
-      <div class="polish-stage">
-        <img src="assets/Buick-4-scaled.jpg" alt="Freshly painted red hood used to demonstrate swirl mark removal" width="1600" height="1200">
-        <div class="haze" id="haze" aria-hidden="true"></div>
-        <svg class="swirls" id="swirls" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <g fill="none" stroke="#fff" stroke-width="1">
-            <circle cx="180" cy="140" r="52" opacity=".16" stroke-dasharray="30 40"/>
-            <circle cx="205" cy="165" r="84" opacity=".11" stroke-dasharray="55 70"/>
-            <circle cx="540" cy="120" r="66" opacity=".14" stroke-dasharray="40 52"/>
-            <circle cx="560" cy="160" r="105" opacity=".09" stroke-dasharray="70 90"/>
-            <circle cx="380" cy="330" r="70" opacity=".15" stroke-dasharray="42 58"/>
-            <circle cx="350" cy="300" r="120" opacity=".1" stroke-dasharray="80 100"/>
-            <circle cx="660" cy="420" r="58" opacity=".14" stroke-dasharray="34 46"/>
-            <circle cx="140" cy="440" r="76" opacity=".12" stroke-dasharray="48 62"/>
-            <circle cx="120" cy="470" r="118" opacity=".08" stroke-dasharray="76 96"/>
-            <circle cx="450" cy="500" r="64" opacity=".13" stroke-dasharray="38 54"/>
-            <path d="M60 220 q 120 -18 240 6 t 260 4" opacity=".12"/>
-            <path d="M120 380 q 160 -22 300 2 t 300 8" opacity=".1"/>
-            <path d="M40 520 q 200 -16 360 6 t 340 2" opacity=".11"/>
-          </g>
-        </svg>
+      <div class="polish-stage" id="polish-stage">
+        <img class="polish-base" src="assets/detail/honda-clean.jpg" alt="Blue Honda Accord, front view, shown with swirled hazy paint that clears as the polisher slider moves" width="1600" height="1200" loading="lazy">
+        <img class="polish-dmg" id="polish-dmg" src="assets/detail/honda-swirled.webp" alt="" width="1514" height="1139" loading="lazy">
+        <span class="polish-pad" id="polish-pad" aria-hidden="true"></span>
         <span class="state-tag" id="polish-tag">Swirled and hazy</span>
       </div>
       <div class="polish-ctl">
@@ -702,32 +699,35 @@ function gsapArray(nl) { return Array.prototype.slice.call(nl); }
 
 /* ---------- page behavior ---------- */
 
-/* swirl removal slider */
+/* swirl removal slider: the corrected area follows the polisher across the paint */
 (function () {
   var range = document.getElementById("polish-range");
   if (!range) return;
-  var swirls = document.getElementById("swirls");
-  var haze = document.getElementById("haze");
+  var stage = document.getElementById("polish-stage");
+  var dmg = document.getElementById("polish-dmg");
+  var pad = document.getElementById("polish-pad");
   var tag = document.getElementById("polish-tag");
   var gloss = document.getElementById("gloss-num");
   var steps = gsapArray(document.querySelectorAll("#polish-steps li"));
+  var idle;
   function apply(v) {
-    var t = v / 100;
-    if (ANIMATE) {
-      gsap.to(swirls, { opacity: 1 - t, duration: 0.25, overwrite: true });
-      gsap.to(haze, { opacity: 1 - t, duration: 0.25, overwrite: true });
-    } else {
-      swirls.style.opacity = String(1 - t);
-      haze.style.opacity = String(1 - t);
-    }
+    var t = v / 100, p = (-8 + t * 116).toFixed(2) + "%";
+    dmg.style.setProperty("--p", p);
+    pad.style.setProperty("--p", p);
     gloss.textContent = String(Math.round(42 + t * 56));
-    tag.textContent = v < 25 ? "Swirled and hazy" : v < 60 ? "Compounding" : v < 95 ? "Polishing" : "Corrected and sealed";
+    tag.textContent = v < 5 ? "Swirled and hazy" : v < 50 ? "Compounding" : v < 95 ? "Polishing" : "Corrected and sealed";
     steps.forEach(function (li, i) { li.classList.toggle("on", t >= (i + 1) / steps.length - 0.24); });
     range.style.setProperty("--fill", v + "%");
     range.setAttribute("aria-valuetext", v + " percent corrected, " + tag.textContent.toLowerCase());
   }
-  range.addEventListener("input", function () { apply(parseInt(range.value, 10)); });
-  apply(0);
+  range.addEventListener("input", function () {
+    var v = parseInt(range.value, 10);
+    apply(v);
+    stage.classList.toggle("is-working", v > 0 && v < 100);
+    clearTimeout(idle);
+    idle = setTimeout(function () { stage.classList.remove("is-working"); }, 600);
+  });
+  apply(parseInt(range.value, 10) || 0);
 })();
 
 </script>
