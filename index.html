@@ -31,6 +31,8 @@
   --accent-glow:rgba(46,134,232,.28);
   --gold:#E8B84B;
   --gold-dark:#7A5E1C;
+  --ok:#3ED598;
+  --ok-glow:rgba(62,213,152,.22);
   --radius:16px;
   --pad-sec:clamp(90px,11vw,170px);
   --ease-out:cubic-bezier(.19,1,.22,1);
@@ -372,6 +374,117 @@ h3{font-size:clamp(1.15rem,2vw,1.45rem);font-weight:800;letter-spacing:-.01em}
 @media (max-width:860px){.about-grid{grid-template-columns:1fr}}
 
 
+
+/* interactive repair demo */
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.repair .sec-head{max-width:760px}
+.car-stage{
+  --c-shadow:#000;--c-light:#fff;--c-primer:#D8CFC8;--c-metal:#A9ACB2;--c-scuff:#E8E3DE;--c-drl:#E6F6FF;
+  position:relative;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+  background:
+    radial-gradient(ellipse 60% 75% at 50% 12%,var(--line-strong),transparent 70%),
+    linear-gradient(180deg,var(--surface),var(--bg));
+}
+.car-view{position:relative;padding:clamp(8px,2vw,24px) clamp(4px,1.5vw,20px) 0}
+.car-svg{width:100%;height:auto;overflow:visible}
+.car-svg .hit{fill:transparent;cursor:pointer;pointer-events:all}
+.car-svg .caliper{fill:var(--accent)}
+.car-svg .sh{fill:var(--c-shadow)}
+.car-svg .lt{fill:var(--c-light)}
+.car-svg .shs{stroke:var(--c-shadow);fill:none}
+.car-svg .lts{stroke:var(--c-light);fill:none}
+.car-svg .primer{stroke:var(--c-primer);fill:none;stroke-linecap:round}
+.car-svg .metal{stroke:var(--c-metal);fill:none;stroke-linecap:round}
+.car-svg .scuff{stroke:var(--c-scuff);fill:none}
+.car-svg .drl{stroke:var(--c-drl);fill:none}
+.car-svg .crack{stroke:var(--c-light);stroke-opacity:.75;stroke-width:1.1;fill:none;stroke-linejoin:round;stroke-dasharray:1 1}
+.car-svg .spoke{fill:url(#g-rim);stroke:var(--c-shadow);stroke-opacity:.3;stroke-width:.8}
+.car-svg .seams{fill:none;stroke:var(--c-shadow);stroke-opacity:.5;stroke-width:1.6}
+
+.hotspots{position:absolute;inset:clamp(8px,2vw,24px) clamp(4px,1.5vw,20px) 0;pointer-events:none}
+.hs{
+  position:absolute;width:34px;height:34px;border-radius:50%;
+  transform:translate(-50%,-50%);pointer-events:auto;
+  display:grid;place-items:center;
+  background:rgba(13,14,16,.7);border:2px solid var(--accent-bright);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  transition:transform .45s var(--ease-out),border-color .3s,background-color .3s;
+}
+.hs::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent-bright);transition:background-color .3s,transform .45s var(--ease-out)}
+.hs::after{
+  content:"";position:absolute;inset:-7px;border-radius:50%;
+  border:2px solid var(--accent-bright);opacity:0;animation:hs-pulse 2.2s var(--ease-out) infinite;
+}
+@keyframes hs-pulse{0%{transform:scale(.7);opacity:.85}100%{transform:scale(1.7);opacity:0}}
+.hs:hover,.hs.is-hover{transform:translate(-50%,-50%) scale(1.14)}
+.hs[aria-pressed="true"]{border-color:var(--ok);background:rgba(13,14,16,.5)}
+.hs[aria-pressed="true"]::before{background:var(--ok);transform:scale(.7)}
+.hs[aria-pressed="true"]::after{animation:none}
+.hs .tip{
+  position:absolute;bottom:calc(100% + 10px);left:50%;
+  transform:translate(-50%,6px);opacity:0;pointer-events:none;white-space:nowrap;
+  background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;
+  padding:6px 10px;font-size:.78rem;font-weight:700;letter-spacing:.02em;color:var(--ink);
+  transition:opacity .3s,transform .45s var(--ease-out);
+}
+.hs.tip-left .tip{left:auto;right:-8px;transform:translate(0,6px)}
+.hs:hover .tip,.hs:focus-visible .tip,.hs.is-hover .tip{opacity:1;transform:translate(-50%,0)}
+.hs.tip-left:hover .tip,.hs.tip-left:focus-visible .tip,.hs.tip-left.is-hover .tip{transform:translate(0,0)}
+.hs:focus-visible{outline-offset:5px;border-radius:50%}
+@media (max-width:640px){
+  .hs{width:24px;height:24px;border-width:1.5px}
+  .hs::before{width:7px;height:7px}
+  .hs::after{inset:-5px}
+  .hs .tip{display:none}
+}
+@media (max-width:420px){
+  .hs{width:18px;height:18px}
+  .hs::before{width:6px;height:6px}
+  .hs::after{inset:-4px}
+}
+
+.repair-bar{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 24px;
+  padding:clamp(16px,2.4vw,24px) clamp(18px,3vw,32px);border-top:1px solid var(--line);
+}
+.repair-progress p{font-weight:700;color:var(--muted)}
+.repair-progress b{color:var(--ink);font-size:1.25em;font-stretch:87%}
+.meter{display:block;width:clamp(150px,24vw,260px);height:6px;margin-top:8px;border-radius:6px;background:var(--line-strong);overflow:hidden}
+.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--ok));transform-origin:left;transform:scaleX(0);transition:transform .9s var(--ease-out)}
+.repair-actions{display:flex;flex-wrap:wrap;gap:10px}
+
+.repair-detail{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);
+  gap:clamp(18px,3vw,36px);margin-top:clamp(20px,3vw,32px);align-items:start;
+}
+.repair-readout{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:clamp(20px,2.6vw,30px);min-height:100%;
+}
+.repair-readout h3{margin-bottom:10px}
+.repair-readout p{color:var(--muted);margin-top:8px}
+.repair-readout p b{color:var(--ink)}
+.repair-readout .svc-link{margin-top:16px}
+.repair-readout.is-done h3{color:var(--ok)}
+.zone-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.zone-chip{
+  width:100%;height:100%;display:flex;gap:12px;align-items:flex-start;text-align:left;
+  padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--bg);
+  transition:border-color .3s,transform .45s var(--ease-out),box-shadow .45s var(--ease-out);
+}
+.zone-chip:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 12px 30px var(--accent-glow)}
+.z-dot{flex:none;width:11px;height:11px;margin-top:7px;border-radius:50%;background:var(--accent-bright);box-shadow:0 0 0 4px var(--accent-glow);transition:background-color .3s,box-shadow .3s}
+.zone-chip[aria-pressed="true"] .z-dot{background:var(--ok);box-shadow:0 0 0 4px var(--ok-glow)}
+.z-text{display:flex;flex-direction:column;min-width:0}
+.z-name{font-weight:800;font-stretch:90%;line-height:1.3}
+.z-state{font-size:.86rem;color:var(--muted);line-height:1.4}
+.zone-chip[aria-pressed="true"] .z-state{color:var(--ok)}
+@media (max-width:860px){.repair-detail{grid-template-columns:1fr}}
+@media (max-width:480px){.zone-list{grid-template-columns:1fr}.repair-actions,.repair-actions .btn{width:100%}}
+@media (prefers-reduced-motion:reduce){
+  .hs::after{animation:none}
+  .meter i,.hs,.hs .tip,.zone-chip{transition:none}
+}
 </style>
 <script type="application/ld+json">
 {
@@ -517,6 +630,301 @@ h3{font-size:clamp(1.15rem,2vw,1.45rem);font-weight:800;letter-spacing:-.01em}
       <li><span class="t-num">Lifetime</span><span class="t-label">Workmanship guarantee</span></li>
       <li><span class="t-num">All</span><span class="t-label">Insurers accepted</span></li>
     </ul>
+  </div>
+</section>
+
+<section class="sec sec-alt repair" id="repair-demo" aria-labelledby="repair-title">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <p class="kicker">Try it yourself</p>
+      <h2 id="repair-title">Tap the damage and <span class="hl">watch it come out</span></h2>
+      <p class="lead">This sedan rolled in after a front end hit and a run in with a parking garage pillar. Pick any damaged area to see what we do to it and how it leaves our shop.</p>
+    </div>
+
+    <div class="car-stage" data-reveal>
+      <div class="car-view">
+        <svg class="car-svg" viewBox="60 120 1080 420" width="1080" height="420" role="img" aria-labelledby="car-title car-desc">
+          <title id="car-title">Damaged red sedan</title>
+          <desc id="car-desc">Side view of a red sedan with a crushed front bumper, a broken headlight, a buckled hood, a dented front door, a scraped rear quarter panel and a curb rashed front wheel.</desc>
+          <defs>
+            <linearGradient id="g-paint" gradientUnits="userSpaceOnUse" x1="0" y1="150" x2="0" y2="390">
+              <stop offset="0" stop-color="#E04650"/>
+              <stop offset=".1" stop-color="#B3151E"/>
+              <stop offset=".38" stop-color="#8C0E16"/>
+              <stop offset=".48" stop-color="#D9343D"/>
+              <stop offset=".56" stop-color="#A8131B"/>
+              <stop offset="1" stop-color="#6E0A10"/>
+            </linearGradient>
+            <linearGradient id="g-lower" gradientUnits="userSpaceOnUse" x1="0" y1="316" x2="0" y2="392">
+              <stop offset="0" style="stop-color:var(--c-shadow)" stop-opacity=".42"/>
+              <stop offset="1" style="stop-color:var(--c-shadow)" stop-opacity=".8"/>
+            </linearGradient>
+            <linearGradient id="g-glass" x1="0" y1="0" x2=".35" y2="1">
+              <stop offset="0" stop-color="#1C2836"/>
+              <stop offset="1" stop-color="#0A0E13"/>
+            </linearGradient>
+            <linearGradient id="g-chrome" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#F2F4F6"/>
+              <stop offset="1" stop-color="#8D939B"/>
+            </linearGradient>
+            <linearGradient id="g-rim" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#E9ECEF"/>
+              <stop offset="1" stop-color="#9AA1AA"/>
+            </linearGradient>
+            <radialGradient id="g-tire">
+              <stop offset=".7" stop-color="#2A2B2F"/>
+              <stop offset="1" stop-color="#0B0B0D"/>
+            </radialGradient>
+            <radialGradient id="g-disc">
+              <stop offset=".3" stop-color="#6B6F75"/>
+              <stop offset="1" stop-color="#34373C"/>
+            </radialGradient>
+            <linearGradient id="g-tail" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#7A0A0E"/>
+              <stop offset="1" stop-color="#FF4D4D"/>
+            </linearGradient>
+            <linearGradient id="g-hl" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#1D252E"/>
+              <stop offset="1" stop-color="#0C0F13"/>
+            </linearGradient>
+            <radialGradient id="g-dent" cx=".56" cy=".6" r=".5">
+              <stop offset="0" style="stop-color:var(--c-shadow)" stop-opacity=".6"/>
+              <stop offset=".6" style="stop-color:var(--c-shadow)" stop-opacity=".25"/>
+              <stop offset="1" style="stop-color:var(--c-shadow)" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="g-crumple" cx=".6" cy=".4" r=".6">
+              <stop offset="0" style="stop-color:var(--c-shadow)" stop-opacity=".5"/>
+              <stop offset="1" style="stop-color:var(--c-shadow)" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="g-ground">
+              <stop offset="0" style="stop-color:var(--c-shadow)" stop-opacity=".8"/>
+              <stop offset="1" style="stop-color:var(--c-shadow)" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="g-glint" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" style="stop-color:var(--c-light)" stop-opacity="0"/>
+              <stop offset=".5" style="stop-color:var(--c-light)" stop-opacity=".6"/>
+              <stop offset="1" style="stop-color:var(--c-light)" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="g-refl" gradientUnits="userSpaceOnUse" x1="0" y1="472" x2="0" y2="540">
+              <stop offset="0" style="stop-color:var(--c-light)" stop-opacity=".55"/>
+              <stop offset="1" style="stop-color:var(--c-light)" stop-opacity="0"/>
+            </linearGradient>
+
+            <filter id="f-b1" filterUnits="userSpaceOnUse" x="0" y="0" width="1200" height="600"><feGaussianBlur stdDeviation="1"/></filter>
+            <filter id="f-b3" filterUnits="userSpaceOnUse" x="0" y="0" width="1200" height="600"><feGaussianBlur stdDeviation="3"/></filter>
+            <filter id="f-b8" filterUnits="userSpaceOnUse" x="0" y="0" width="1200" height="600"><feGaussianBlur stdDeviation="8"/></filter>
+
+            <path id="body-shape" d="M98 384 L92 336 C90 300 98 278 120 268 L176 252 C210 246 250 242 300 240 C335 238 354 234 372 226 C405 205 435 184 468 171 C500 160 535 155 575 154 L715 154 C752 155 784 164 812 181 L884 230 C912 232 940 218 970 222 C990 232 1004 248 1020 259 C1040 262 1058 268 1066 286 L1052 304 L1074 320 L1060 342 C1074 360 1072 378 1058 386 L986 388 A84 84 0 0 0 818 388 L388 388 A84 84 0 0 0 220 388 L112 387 Z"/>
+            <path id="glass-shape" d="M384 240 C410 220 440 199 474 185 C503 174 536 169 574 168 L712 168 C746 169 774 177 798 192 L846 232 C848 236 846 238 842 238 L392 246 Z"/>
+            <clipPath id="clip-body"><use href="#body-shape"/></clipPath>
+            <clipPath id="clip-glass"><use href="#glass-shape"/></clipPath>
+            <clipPath id="clip-hl"><path d="M1000 263 C1035 262 1072 268 1100 284 L1103 297 C1072 296 1036 291 1004 282 Z"/></clipPath>
+            <mask id="m-quarter" maskUnits="userSpaceOnUse" x="60" y="120" width="1080" height="420">
+              <rect id="q-mask" class="lt" x="100" y="250" width="320" height="140"/>
+            </mask>
+            <mask id="m-refl" maskUnits="userSpaceOnUse" x="60" y="472" width="1080" height="70">
+              <rect x="60" y="472" width="1080" height="70" fill="url(#g-refl)"/>
+            </mask>
+
+                        <g id="tire-proto">
+              <circle r="74" fill="url(#g-tire)"/>
+              <circle r="66" class="lts" stroke-opacity=".05" stroke-width="2"/>
+              <circle r="54" class="sh" opacity=".92"/>
+              <circle r="42" fill="url(#g-disc)"/>
+              <circle r="16" class="sh" opacity=".55"/>
+              <path class="caliper" d="M-38 -14 A40.5 40.5 0 0 1 -14 -38 L-8 -26 A27 27 0 0 0 -26 -8 Z"/>
+            </g>
+            <g id="rim-proto">
+              <path class="spoke" d="M-4 -12 L-5.5 -49 L5.5 -49 L4 -12 Z"/><path class="spoke" d="M-4 -12 L-5.5 -49 L5.5 -49 L4 -12 Z" transform="rotate(36)"/><path class="spoke" d="M-4 -12 L-5.5 -49 L5.5 -49 L4 -12 Z" transform="rotate(72)"/><path class="spoke" d="M-4 -12 L-5.5 -49 L5.5 -49 L4 -12 Z" transform="rotate(108)"/><path class="spoke" d="M-4 -12 L-5.5 -49 L5.5 -49 L4 -12 Z" transform="rotate(144)"/><path class="spoke" d="M-4 -12 L-5.5 -49 L5.5 -49 L4 -12 Z" transform="rotate(180)"/><path class="spoke" d="M-4 -12 L-5.5 -49 L5.5 -49 L4 -12 Z" transform="rotate(216)"/><path class="spoke" d="M-4 -12 L-5.5 -49 L5.5 -49 L4 -12 Z" transform="rotate(252)"/><path class="spoke" d="M-4 -12 L-5.5 -49 L5.5 -49 L4 -12 Z" transform="rotate(288)"/><path class="spoke" d="M-4 -12 L-5.5 -49 L5.5 -49 L4 -12 Z" transform="rotate(324)"/>
+              <circle r="51" fill="none" stroke="url(#g-chrome)" stroke-width="4"/>
+              <circle r="13" fill="url(#g-rim)"/>
+              <circle r="5" class="sh" opacity=".7"/>
+            </g>
+          </defs>
+
+          <ellipse cx="604" cy="472" rx="560" ry="20" fill="url(#g-ground)"/>
+          <ellipse cx="304" cy="471" rx="66" ry="6" class="sh" opacity=".85" filter="url(#f-b3)"/>
+          <ellipse cx="902" cy="471" rx="66" ry="6" class="sh" opacity=".85" filter="url(#f-b3)"/>
+
+          <g id="car">
+            <path d="M818 388 A84 84 0 0 1 986 388 Z M220 388 A84 84 0 0 1 388 388 Z" fill="#050506"/>
+
+            <use href="#body-shape" fill="url(#g-paint)"/>
+            <g clip-path="url(#clip-body)">
+              <ellipse cx="600" cy="286" rx="430" ry="7" class="lt" opacity=".14" filter="url(#f-b3)"/>
+              <path d="M480 160 C540 156 640 156 712 157" class="lts" stroke-opacity=".45" stroke-width="3" filter="url(#f-b1)"/>
+              <rect x="984" y="236" width="30" height="150" class="lt" opacity=".06" filter="url(#f-b8)"/>
+              <rect x="150" y="256" width="36" height="130" class="lt" opacity=".06" filter="url(#f-b8)"/>
+              <path d="M118 288 C300 274 700 266 1046 266" class="lts" stroke-opacity=".32" stroke-width="2" filter="url(#f-b1)"/>
+              <path d="M118 294 C300 280 700 272 1046 272" class="shs" stroke-opacity=".22" stroke-width="3"/>
+
+              <path id="hz-fill" d="M60 320 L640 318 C672 318 690 300 725 300 C760 300 778 317 810 317 L1140 316 L1140 420 L60 420 Z" fill="url(#g-lower)"/>
+              <path id="hz-glow" d="M60 320 L640 318 C672 318 690 300 725 300 C760 300 778 317 810 317 L1140 316" class="lts" stroke-opacity=".16" stroke-width="5" filter="url(#f-b3)"/>
+              <path id="hz-line" d="M60 320 L640 318 C672 318 690 300 725 300 C760 300 778 317 810 317 L1140 316" class="lts" stroke-opacity=".42" stroke-width="1.3"/>
+
+              <rect x="220" y="370" width="800" height="22" class="sh" opacity=".4"/>
+              <path d="M818 388 A84 84 0 0 1 986 388 M220 388 A84 84 0 0 1 388 388" class="shs" stroke-opacity=".55" stroke-width="12" filter="url(#f-b3)"/>
+              <path d="M392 370 L818 370" class="lts" stroke-opacity=".1"/>
+
+              <g class="seams">
+                <path d="M392 246 C396 300 398 340 398 384"/>
+                <path d="M612 242 L616 384"/>
+                <path d="M848 238 C834 268 818 302 814 384"/>
+                <path d="M1004 292 C1000 322 998 352 1000 386"/>
+                <path d="M180 252 C182 262 182 272 180 280"/>
+              </g>
+              <rect x="318" y="268" width="26" height="22" rx="6" class="shs" stroke-opacity=".45" stroke-width="1.2"/>
+
+              <path d="M94 296 C110 280 146 270 178 264 L182 278 C152 284 122 292 97 306 Z" fill="url(#g-tail)"/>
+              <path d="M101 294 C120 284 148 276 176 270" class="lts" stroke-opacity=".35" stroke-width="1"/>
+
+              <g clip-path="url(#clip-hl)">
+                <path d="M1000 263 C1035 262 1072 268 1100 284 L1103 297 C1072 296 1036 291 1004 282 Z" fill="url(#g-hl)"/>
+                <circle cx="1046" cy="281" r="8" fill="url(#g-chrome)"/>
+                <circle cx="1046" cy="281" r="4.5" fill="url(#g-glass)"/>
+                <path id="drl" class="drl" d="M1008 267 C1040 266 1070 271 1094 284" stroke-width="2.6" stroke-linecap="round" opacity=".12"/>
+                <g id="d-headlight">
+                  <path id="hl-fog" d="M1000 263 C1035 262 1072 268 1100 284 L1103 297 C1072 296 1036 291 1004 282 Z" class="lt" opacity=".16"/>
+                  <path id="hl-chunk" d="M1056 276 L1068 272 L1074 284 L1062 290 Z" class="sh" opacity=".85"/>
+                  <g class="crack">
+                    <path pathLength="1" d="M1062 281 L1040 270 L1026 274"/>
+                    <path pathLength="1" d="M1062 281 L1030 287 L1012 281"/>
+                    <path pathLength="1" d="M1062 281 L1080 272"/>
+                    <path pathLength="1" d="M1062 281 L1088 294"/>
+                    <path pathLength="1" d="M1062 281 L1048 294"/>
+                    <path pathLength="1" d="M1040 270 L1044 284 L1030 287"/>
+                  </g>
+                </g>
+              </g>
+
+              <use href="#glass-shape" fill="url(#g-glass)"/>
+              <g clip-path="url(#clip-glass)">
+                <path d="M430 246 L520 168 L562 168 L472 246 Z" class="lt" opacity=".06"/>
+                <path d="M640 246 L700 168 L718 168 L658 246 Z" class="lt" opacity=".05"/>
+                <path d="M548 214 C548 200 560 194 574 194 C588 194 596 202 596 214 L594 246 L550 246 Z" class="sh" opacity=".35"/>
+                <path d="M722 214 C722 200 734 194 748 194 C762 194 770 202 770 214 L768 246 L724 246 Z" class="sh" opacity=".35"/>
+                <rect x="604" y="160" width="16" height="90" fill="#08090A"/>
+              </g>
+              <use href="#glass-shape" fill="none" stroke="url(#g-chrome)" stroke-width="2.4"/>
+
+              <rect x="548" y="262" width="40" height="8" rx="4" fill="url(#g-chrome)"/>
+              <rect x="770" y="258" width="40" height="8" rx="4" fill="url(#g-chrome)"/>
+
+              <g id="d-hood">
+                <path d="M930 244 C950 236 970 236 990 248 C970 254 950 256 930 250 Z" class="sh" opacity=".35" filter="url(#f-b3)"/>
+                <path d="M934 254 C944 258 952 262 956 266 C950 272 950 278 958 282 C966 286 972 290 970 300" class="shs" stroke-opacity=".4" stroke-width="3" filter="url(#f-b1)"/>
+                <path d="M936 250 C946 254 954 258 958 262 C952 268 952 274 960 278 C968 282 974 286 972 296" class="lts" stroke-opacity=".22" stroke-width="1.2"/>
+              </g>
+
+              <g id="d-bumper">
+                <path d="M1020 296 L1064 286 L1056 388 L1010 388 Z" fill="url(#g-crumple)"/>
+                <path d="M1004 292 C1000 322 998 352 1000 386" class="shs" stroke-opacity=".8" stroke-width="5"/>
+                <path d="M1007 292 C1012 320 1010 350 1014 386" class="lts" stroke-opacity=".25" stroke-width="1.2"/>
+                <path d="M1046 336 L1066 330 L1062 346 L1050 352 Z" class="sh" opacity=".75"/>
+                <path d="M1062 300 L1046 312 L1052 322 L1034 334 L1040 346" class="shs" stroke-opacity=".75" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="M1063 301 L1047 313 L1053 323 L1035 335 L1041 347" class="lts" stroke-opacity=".25" stroke-width="1" stroke-linejoin="round"/>
+                <path d="M1058 352 L1040 360 L1046 372 L1030 380" class="shs" stroke-opacity=".7" stroke-width="1.6" stroke-linejoin="round"/>
+                <g class="scuff" stroke-opacity=".35" stroke-linecap="round">
+                  <path d="M1012 330 L1046 328"/><path d="M1016 338 L1044 336"/><path d="M1010 345 L1038 344"/><path d="M1020 358 L1050 354"/><path d="M1014 366 L1036 365"/>
+                </g>
+              </g>
+
+              <g id="d-door">
+                <ellipse cx="732" cy="310" rx="66" ry="40" fill="url(#g-dent)"/>
+                <path d="M668 300 C686 274 744 266 780 286" class="lts" stroke-opacity=".45" stroke-width="3" filter="url(#f-b1)"/>
+                <path d="M684 322 L716 304 L768 298" class="shs" stroke-opacity=".6" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M684 319 L716 301 L768 295" class="lts" stroke-opacity=".35" stroke-width="1" stroke-linejoin="round"/>
+              </g>
+
+              <g id="d-quarter" mask="url(#m-quarter)">
+                <path d="M130 290 C220 282 320 282 384 292 L384 312 C300 306 210 308 130 318 Z" class="lt" opacity=".07"/>
+                <path class="primer" d="M132 296 C190 292 260 289 336 291" stroke-width="2.2"/>
+                <path class="primer" d="M146 306 C210 303 280 302 380 305" stroke-width="1.3"/>
+                <path class="primer" d="M126 314 C170 313 200 314 232 317" stroke-width="1.6"/>
+                <path class="primer" d="M196 286 C240 284 290 283 330 285" stroke-width="1"/>
+                <path d="M150 300 C215 297 285 296 360 298" class="shs" stroke-opacity=".5" stroke-width="3.4" stroke-linecap="round"/>
+                <path class="metal" d="M150 300 C215 297 285 296 360 298" stroke-width="1.4"/>
+                <path class="primer" d="M122 332 C150 332 180 335 210 340" stroke-width="1.8"/>
+                <path class="primer" d="M118 346 C145 347 170 350 196 356" stroke-width="1.2"/>
+              </g>
+              <rect id="q-spray" x="78" y="250" width="44" height="140" fill="url(#g-glint)" opacity="0" filter="url(#f-b3)"/>
+              <rect id="glint" x="-400" y="130" width="140" height="300" fill="url(#g-glint)" opacity="0" transform="skewX(-18)"/>
+
+              <use href="#body-shape" fill="none" class="shs" stroke-opacity=".5" stroke-width="7"/>
+            </g>
+
+            <path d="M814 236 C812 222 828 213 848 216 C858 218 862 228 858 238 C852 246 832 248 820 245 C816 243 815 240 814 236 Z" fill="url(#g-paint)"/>
+            <path d="M820 224 C830 217 844 216 854 220" class="lts" stroke-opacity=".4" stroke-width="1.5"/>
+            <path d="M836 245 L848 254 L830 255 Z" class="sh" opacity=".8"/>
+
+            <path id="drl-glow" class="drl" d="M1008 267 C1040 266 1070 271 1094 284" stroke-width="6" stroke-linecap="round" opacity="0" filter="url(#f-b3)"/>
+            <path id="tail-glow" d="M94 296 C110 280 146 270 178 264 L182 278 C152 284 122 292 97 306 Z" fill="url(#g-tail)" opacity="0" filter="url(#f-b8)"/>
+
+            <g transform="translate(304 398)"><use href="#tire-proto"/><use href="#rim-proto"/></g>
+            <g transform="translate(902 398)">
+              <use href="#tire-proto"/>
+              <g id="rim-front">
+                <use href="#rim-proto"/>
+                <g id="d-wheel" fill="none">
+                  <circle r="50.5" class="scuff" stroke-width="3" stroke-dasharray="6 3 2 4 11 2 5 3 3 300" stroke-linecap="round"/>
+                  <circle r="47.5" class="shs" stroke-opacity=".7" stroke-width="1.5" stroke-dasharray="3 5 8 4 2 330"/>
+                  <circle r="70" class="scuff" stroke-opacity=".25" stroke-width="2" stroke-dasharray="26 420" transform="rotate(8)"/>
+                </g>
+              </g>
+            </g>
+          </g>
+
+          <g mask="url(#m-refl)" opacity=".22" aria-hidden="true">
+            <use href="#car" transform="matrix(1 0 0 -1 0 944)"/>
+          </g>
+
+          <g class="hits" aria-hidden="true">
+            <path class="hit" data-zone="quarter" d="M92 270 L392 236 L398 388 L92 386 Z"/>
+            <path class="hit" data-zone="door" d="M616 242 L848 236 L814 386 L618 386 Z"/>
+            <path class="hit" data-zone="hood" d="M880 214 L1000 214 L1000 300 L920 300 L880 250 Z"/>
+            <path class="hit" data-zone="bumper" d="M1000 288 L1118 288 L1118 392 L996 392 Z"/>
+            <path class="hit" data-zone="headlight" d="M996 256 L1108 274 L1108 302 L996 288 Z"/>
+            <circle class="hit" data-zone="wheel" cx="902" cy="398" r="74"/>
+          </g>
+        </svg>
+
+        <div class="hotspots">
+          <button class="hs" type="button" data-zone="quarter" aria-pressed="false" style="left:18.06%;top:42.86%"><span class="visually-hidden">Repair </span><span class="tip">Rear quarter panel</span></button>
+          <button class="hs" type="button" data-zone="door" aria-pressed="false" style="left:61.57%;top:42.86%"><span class="visually-hidden">Repair </span><span class="tip">Front door</span></button>
+          <button class="hs" type="button" data-zone="hood" aria-pressed="false" style="left:81.02%;top:28.1%"><span class="visually-hidden">Repair </span><span class="tip">Hood</span></button>
+          <button class="hs tip-left" type="button" data-zone="headlight" aria-pressed="false" style="left:89.81%;top:36.19%"><span class="visually-hidden">Repair </span><span class="tip">Headlight</span></button>
+          <button class="hs tip-left" type="button" data-zone="bumper" aria-pressed="false" style="left:93.52%;top:54.76%"><span class="visually-hidden">Repair </span><span class="tip">Front bumper</span></button>
+          <button class="hs" type="button" data-zone="wheel" aria-pressed="false" style="left:77.96%;top:66.19%"><span class="visually-hidden">Repair </span><span class="tip">Front wheel</span></button>
+        </div>
+      </div>
+
+      <div class="repair-bar">
+        <div class="repair-progress">
+          <p id="repair-count"><b>0</b> of 6 repaired</p>
+          <span class="meter" aria-hidden="true"><i id="repair-meter"></i></span>
+        </div>
+        <div class="repair-actions">
+          <button class="btn btn-primary" type="button" id="repair-all" data-magnetic>Repair everything</button>
+          <button class="btn btn-ghost" type="button" id="repair-reset">Reset damage</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="repair-detail">
+      <div class="repair-readout" id="repair-readout" aria-live="polite">
+        <h3>Pick a damaged area</h3>
+        <p>Tap a glowing marker on the car, or choose a panel from the list. Tap it again to bring the damage back and compare.</p>
+        <noscript><p>Turn on JavaScript to repair the car.</p></noscript>
+      </div>
+      <ul class="zone-list">
+        <li><button class="zone-chip" type="button" data-zone="bumper" aria-pressed="false"><span class="z-dot" aria-hidden="true"></span><span class="z-text"><span class="z-name">Front bumper</span><span class="z-state">Crushed and cracked</span></span></button></li>
+        <li><button class="zone-chip" type="button" data-zone="headlight" aria-pressed="false"><span class="z-dot" aria-hidden="true"></span><span class="z-text"><span class="z-name">Headlight</span><span class="z-state">Lens shattered, light out</span></span></button></li>
+        <li><button class="zone-chip" type="button" data-zone="hood" aria-pressed="false"><span class="z-dot" aria-hidden="true"></span><span class="z-text"><span class="z-name">Hood</span><span class="z-state">Buckled and pushed back</span></span></button></li>
+        <li><button class="zone-chip" type="button" data-zone="door" aria-pressed="false"><span class="z-dot" aria-hidden="true"></span><span class="z-text"><span class="z-name">Front door</span><span class="z-state">Dent with a sharp crease</span></span></button></li>
+        <li><button class="zone-chip" type="button" data-zone="quarter" aria-pressed="false"><span class="z-dot" aria-hidden="true"></span><span class="z-text"><span class="z-name">Rear quarter panel</span><span class="z-state">Scraped to primer</span></span></button></li>
+        <li><button class="zone-chip" type="button" data-zone="wheel" aria-pressed="false"><span class="z-dot" aria-hidden="true"></span><span class="z-text"><span class="z-name">Front wheel</span><span class="z-state">Curb rash on the rim</span></span></button></li>
+      </ul>
+    </div>
   </div>
 </section>
 
@@ -1057,6 +1465,195 @@ function gsapArray(nl) { return Array.prototype.slice.call(nl); }
   restart();
 })();
 
+
+/* interactive repair demo: click damage on the car to fix it */
+(function () {
+  var root = document.getElementById("repair-demo");
+  if (!root) return;
+  var $ = function (id) { return document.getElementById(id); };
+  var ORDER = ["bumper", "headlight", "hood", "door", "quarter", "wheel"];
+  var Z = {
+    bumper: { name: "Front bumper", dmg: "Crushed and cracked", fix: "Cover reshaped or replaced, fitted back to the fender line and refinished to match. Parking sensors are checked before it goes back on.", href: "bumper-plastic-repair.html", link: "How we fix bumpers" },
+    headlight: { name: "Headlight", dmg: "Lens shattered, light out", fix: "New headlamp assembly installed and aimed to spec, daytime running light working again.", href: "collision-repair.html", link: "How we handle collision repair" },
+    hood: { name: "Hood", dmg: "Buckled and pushed back", fix: "Hood replaced, panel gaps set even with the fenders, then painted with computer matched PPG color.", href: "collision-repair.html", link: "How we handle collision repair" },
+    door: { name: "Front door", dmg: "Dent with a sharp crease", fix: "Dent massaged out from behind the panel with paintless dent repair. The factory paint never gets touched.", href: "paintless-dent-repair.html", link: "How paintless dent repair works" },
+    quarter: { name: "Rear quarter panel", dmg: "Scraped to primer", fix: "Scratches filled and block sanded, then PPG waterborne color sprayed and blended into the door so you cannot find the edge.", href: "auto-painting.html", link: "How we match paint" },
+    wheel: { name: "Front wheel", dmg: "Curb rash on the rim", fix: "Rim lip refinished and the wheel balanced, so it looks right and rolls true.", href: "detailing-restoration.html", link: "See reconditioning" }
+  };
+  var state = {}, tls = {}, pending = [];
+  ORDER.forEach(function (z) { state[z] = false; });
+
+  /* geometry: 0 = damaged, 1 = repaired */
+  var S = { hood: 0, bumper: 0, dent: 0 };
+  var bodyEl = $("body-shape"), hzFill = $("hz-fill"), hzLine = $("hz-line"), hzGlow = $("hz-glow");
+  function mix(a, b, t) { return Math.round((a + (b - a) * t) * 100) / 100; }
+  function P(d, c, t) { return mix(d[0], c[0], t) + " " + mix(d[1], c[1], t); }
+  function bodyD() {
+    var h = S.hood, b = S.bumper;
+    var nx = mix(1020, 1042, b), ny = mix(259, 256, b);
+    /* hood's last control point rides with the nose so the two never kink */
+    var cx = mix(nx - 16, nx - 14, h), cy = mix(ny - 11, ny - 3, h);
+    return "M98 384 L92 336 C90 300 98 278 120 268 L176 252 C210 246 250 242 300 240 C335 238 354 234 372 226 C405 205 435 184 468 171 C500 160 535 155 575 154 L715 154 C752 155 784 164 812 181 L884 230" +
+      " C" + P([912, 232], [915, 235], h) + " " + P([940, 218], [950, 240], h) + " " + P([970, 222], [985, 245], h) +
+      " C" + P([990, 232], [1008, 249], h) + " " + cx + " " + cy + " " + nx + " " + ny +
+      " C" + P([1040, 262], [1078, 263], b) + " " + P([1058, 268], [1100, 276], b) + " " + P([1066, 286], [1107, 294], b) +
+      " L" + P([1052, 304], [1111, 312], b) + " L" + P([1074, 320], [1113, 330], b) + " L" + P([1060, 342], [1113, 346], b) +
+      " C" + P([1074, 360], [1113, 366], b) + " " + P([1072, 378], [1106, 380], b) + " " + P([1058, 386], [1092, 386], b) +
+      " L986 388 A84 84 0 0 0 818 388 L388 388 A84 84 0 0 0 220 388 L112 387 Z";
+  }
+  function hzD(closed) {
+    var t = S.dent;
+    var d = "M60 320 L640 318 C672 318 " + P([690, 300], [690, 317.6], t) + " " + P([725, 300], [725, 317.5], t) +
+      " C" + P([760, 300], [760, 317.3], t) + " 778 317 810 317 L1140 316";
+    return closed ? d + " L1140 420 L60 420 Z" : d;
+  }
+  function draw() {
+    bodyEl.setAttribute("d", bodyD());
+    var line = hzD(false);
+    hzLine.setAttribute("d", line);
+    hzGlow.setAttribute("d", line);
+    hzFill.setAttribute("d", hzD(true));
+  }
+
+  /* one glint per zone so simultaneous repairs never fight over it */
+  var glintSrc = $("glint");
+  function glint(tl, x0, x1, at, dur) {
+    dur = dur || 1;
+    var g = glintSrc.cloneNode(false);
+    g.removeAttribute("id");
+    glintSrc.parentNode.insertBefore(g, glintSrc);
+    /* skewX(-18) shifts x left by ~0.32 * y, so offset the range to land on the panel */
+    tl.fromTo(g, { attr: { x: x0 - 60 }, opacity: 0 }, { attr: { x: x1 + 90 }, duration: dur, ease: "power2.inOut" }, at)
+      .to(g, { opacity: 1, duration: dur * .25, yoyo: true, repeat: 1, repeatDelay: dur * .5, ease: "sine.inOut" }, at);
+  }
+
+  function build(z) {
+    var tl = gsap.timeline({ paused: true, defaults: { ease: "power2.out" } });
+    if (z === "bumper") {
+      tl.to(S, { bumper: 1, duration: 1.3, ease: "power3.inOut", onUpdate: draw }, 0)
+        .to("#d-bumper", { opacity: 0, duration: .6 }, .35);
+      glint(tl, 1000, 1140, .9);
+    } else if (z === "headlight") {
+      tl.to("#d-headlight .crack path", { strokeDashoffset: -1, duration: .55, stagger: .05, ease: "power2.in" }, 0)
+        .to("#hl-fog, #hl-chunk", { opacity: 0, duration: .5 }, .3)
+        .to("#drl", { keyframes: [{ opacity: .9, duration: .07 }, { opacity: .25, duration: .09 }, { opacity: 1, duration: .35 }] }, .8)
+        .to("#drl-glow", { opacity: .9, duration: .6 }, .95);
+      glint(tl, 990, 1110, .5);
+    } else if (z === "hood") {
+      tl.to(S, { hood: 1, duration: 1.2, ease: "power3.inOut", onUpdate: draw }, 0)
+        .to("#d-hood", { opacity: 0, duration: .6 }, .3);
+      glint(tl, 880, 1040, .8);
+    } else if (z === "door") {
+      tl.to("#d-door", { scale: .25, opacity: 0, transformOrigin: "50% 50%", duration: .9, ease: "back.in(1.4)" }, 0)
+        .to(S, { dent: 1, duration: 1.4, ease: "elastic.out(1,.45)", onUpdate: draw }, .35);
+      glint(tl, 620, 850, .9);
+    } else if (z === "quarter") {
+      tl.fromTo("#q-spray", { attr: { x: 78 } }, { attr: { x: 398 }, duration: 1.3, ease: "power1.inOut" }, 0)
+        .to("#q-spray", { opacity: .9, duration: .2, yoyo: true, repeat: 1, repeatDelay: .9 }, 0)
+        .fromTo("#q-mask", { attr: { x: 100 } }, { attr: { x: 420 }, duration: 1.3, ease: "power1.inOut" }, .05);
+      glint(tl, 110, 400, 1.3);
+    } else if (z === "wheel") {
+      tl.to("#rim-front", { rotation: 360, transformOrigin: "50% 50%", duration: 1.5, ease: "power3.inOut" }, 0)
+        .to("#d-wheel", { opacity: 0, duration: .8 }, .35);
+    }
+    return tl;
+  }
+
+  /* reduced motion or no GSAP: jump straight to the end state */
+  function setStatic(z, fixed) {
+    var v = fixed ? 1 : 0;
+    if (z === "bumper") S.bumper = v;
+    if (z === "hood") S.hood = v;
+    if (z === "door") S.dent = v;
+    draw();
+    $("d-" + z).style.opacity = fixed ? 0 : 1;
+    if (z === "headlight") {
+      $("drl").style.opacity = fixed ? 1 : .12;
+      $("drl-glow").style.opacity = fixed ? .9 : 0;
+    }
+  }
+
+  var readout = $("repair-readout"), count = $("repair-count"), meter = $("repair-meter");
+  var finaleTl = null;
+  function render(z) {
+    var n = ORDER.filter(function (k) { return state[k]; }).length;
+    count.innerHTML = "<b>" + n + "</b> of 6 repaired";
+    meter.style.transform = "scaleX(" + n / 6 + ")";
+    root.querySelectorAll('[data-zone="' + z + '"]').forEach(function (el) {
+      if (el.tagName === "BUTTON") el.setAttribute("aria-pressed", String(state[z]));
+    });
+    var chipState = root.querySelector('.zone-chip[data-zone="' + z + '"] .z-state');
+    chipState.textContent = state[z] ? "Repaired" : Z[z].dmg;
+
+    var all = n === 6;
+    readout.classList.toggle("is-done", all);
+    if (all) {
+      readout.innerHTML = "<h3>Back to pre-accident condition</h3><p>Every panel straight, every light working, paint matched and blended. That is the only standard a car leaves our shop at.</p><a class=\"svc-link\" href=\"#estimate\">Get a free estimate <span aria-hidden=\"true\">&rarr;</span></a>";
+    } else {
+      var d = Z[z];
+      readout.innerHTML = "<h3>" + d.name + "</h3>" +
+        (state[z]
+          ? "<p><b>Came in:</b> " + d.dmg + ".</p><p><b>What we do:</b> " + d.fix + "</p>"
+          : "<p><b>Showing the damage:</b> " + d.dmg + ". Tap it again to repair.</p>") +
+        "<a class=\"svc-link\" href=\"" + d.href + "\">" + d.link + " <span aria-hidden=\"true\">&rarr;</span></a>";
+    }
+    finale(all);
+  }
+
+  function finale(on) {
+    if (!ANIMATE) {
+      $("tail-glow").style.opacity = on ? .7 : 0;
+      return;
+    }
+    if (!finaleTl) {
+      finaleTl = gsap.timeline({ paused: true });
+      finaleTl.to("#tail-glow", { opacity: .7, duration: .8, ease: "power2.out" }, .2);
+      glint(finaleTl, 60, 1140, 0, 1.8);
+    }
+    if (on) finaleTl.delay(.9).restart(true);
+    else finaleTl.delay(0).reverse();
+  }
+
+  function toggle(z, force) {
+    var fixed = force === undefined ? !state[z] : force;
+    if (fixed === state[z]) return;
+    state[z] = fixed;
+    if (ANIMATE) {
+      var tl = tls[z] || (tls[z] = build(z));
+      if (fixed) tl.timeScale(1).play();
+      else tl.timeScale(1.7).reverse();
+    } else {
+      setStatic(z, fixed);
+    }
+    render(z);
+  }
+
+  function clearPending() { pending.forEach(function (c) { c.kill(); }); pending = []; }
+
+  draw();
+  root.querySelectorAll("button[data-zone]").forEach(function (b) {
+    b.addEventListener("click", function () { clearPending(); toggle(b.dataset.zone); });
+  });
+  root.querySelectorAll(".hit").forEach(function (h) {
+    var hs = root.querySelector('.hs[data-zone="' + h.dataset.zone + '"]');
+    h.addEventListener("click", function () { clearPending(); toggle(h.dataset.zone); });
+    h.addEventListener("mouseenter", function () { hs.classList.add("is-hover"); });
+    h.addEventListener("mouseleave", function () { hs.classList.remove("is-hover"); });
+  });
+  $("repair-all").addEventListener("click", function () {
+    clearPending();
+    var todo = ORDER.filter(function (z) { return !state[z]; });
+    todo.forEach(function (z, i) {
+      if (ANIMATE && i) pending.push(gsap.delayedCall(i * .35, toggle, [z, true]));
+      else toggle(z, true);
+    });
+  });
+  $("repair-reset").addEventListener("click", function () {
+    clearPending();
+    ORDER.forEach(function (z) { toggle(z, false); });
+    readout.innerHTML = "<h3>Pick a damaged area</h3><p>Tap a glowing marker on the car, or choose a panel from the list. Tap it again to bring the damage back and compare.</p>";
+  });
+})();
 </script>
 </body>
 </html>
