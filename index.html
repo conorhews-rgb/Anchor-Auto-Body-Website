@@ -391,15 +391,17 @@ h3{font-size:clamp(1.15rem,2vw,1.45rem);font-weight:800;letter-spacing:-.01em}
 .car-tab[aria-selected="true"] .ct-sub{color:var(--ink)}
 .car-stage{position:relative;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
 .photo-stage{position:relative;aspect-ratio:3/2;overflow:hidden;background:var(--bg);isolation:isolate}
-.photo-stage img{display:block}
+.photo-stage img{display:block;transition:opacity .5s}
+.photo-stage.is-loading img{opacity:0}
 .ps-base{width:100%;height:100%;object-fit:cover}
 .ps-patch,.ps-glint{position:absolute;pointer-events:none}
-.ps-patch{
-  --r:0px;
-  -webkit-mask-image:radial-gradient(circle at var(--ox) var(--oy),#000 calc(var(--r) - 90px),transparent var(--r));
-  mask-image:radial-gradient(circle at var(--ox) var(--oy),#000 calc(var(--r) - 90px),transparent var(--r));
+.ps-patch{--r:1px}
+/* mask only while animating: WebKit renders a zero-radius gradient mask as empty */
+.ps-patch.is-anim{
+  -webkit-mask-image:radial-gradient(circle at var(--ox) var(--oy),transparent calc(var(--r) - 90px),#000 var(--r));
+  mask-image:radial-gradient(circle at var(--ox) var(--oy),transparent calc(var(--r) - 90px),#000 var(--r));
 }
-.ps-patch.is-on{--r:9999px}
+.ps-patch.is-on{visibility:hidden}
 .ps-glint{
   opacity:0;
   background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.55) 50%,transparent 62%) no-repeat;
@@ -646,10 +648,10 @@ h3{font-size:clamp(1.15rem,2vw,1.45rem);font-weight:800;letter-spacing:-.01em}
       <div class="car-panel" role="tabpanel" id="panel-honda" aria-labelledby="tab-honda" data-car="honda">
         <div class="car-stage">
           <div class="photo-stage">
-            <img class="ps-base" src="assets/repair/honda-before.jpg" width="1500" height="1000" alt="Blue Honda Accord after a front end collision, with a folded hood, a crushed hood edge, bent grille trim and a cracked windshield wrapped in plastic">
-            <img class="ps-patch" data-zone="windshield" src="assets/repair/honda-windshield.webp" width="694" height="246" alt="" decoding="async" style="left:23.667%;top:7.9%;width:46.267%;height:24.6%;--ox:48.27%;--oy:45.12%"><span class="ps-glint" data-zone="windshield" aria-hidden="true" style="left:23.667%;top:7.9%;width:46.267%;height:24.6%;-webkit-mask-image:url(assets/repair/honda-windshield.webp);mask-image:url(assets/repair/honda-windshield.webp)"></span><img class="ps-patch" data-zone="hood" src="assets/repair/honda-hood.webp" width="1044" height="221" alt="" decoding="async" style="left:15.133%;top:28.9%;width:69.6%;height:22.1%;--ox:42.48%;--oy:47.96%"><span class="ps-glint" data-zone="hood" aria-hidden="true" style="left:15.133%;top:28.9%;width:69.6%;height:22.1%;-webkit-mask-image:url(assets/repair/honda-hood.webp);mask-image:url(assets/repair/honda-hood.webp)"></span><img class="ps-patch" data-zone="grille" src="assets/repair/honda-grille.webp" width="1097" height="237" alt="" decoding="async" style="left:13.8%;top:41.4%;width:73.133%;height:23.7%;--ox:22.7%;--oy:46.84%"><span class="ps-glint" data-zone="grille" aria-hidden="true" style="left:13.8%;top:41.4%;width:73.133%;height:23.7%;-webkit-mask-image:url(assets/repair/honda-grille.webp);mask-image:url(assets/repair/honda-grille.webp)"></span>
+            <img class="ps-base" src="assets/repair/honda-after.jpg" width="1500" height="1000" alt="Blue Honda Accord after a front end collision, with a folded hood, a crushed hood edge, bent grille trim and a cracked windshield wrapped in plastic">
+            <img class="ps-patch" data-zone="windshield" src="assets/repair/honda-windshield-damage.webp" width="733" height="268" alt="" decoding="async" style="left:25.333%;top:6.7%;width:48.867%;height:26.8%;--ox:50.48%;--oy:53.36%"><span class="ps-glint" data-zone="windshield" aria-hidden="true" style="left:25.333%;top:6.7%;width:48.867%;height:26.8%;-webkit-mask-image:url(assets/repair/honda-windshield-damage.webp);mask-image:url(assets/repair/honda-windshield-damage.webp)"></span><img class="ps-patch" data-zone="hood" src="assets/repair/honda-hood-damage.webp" width="1082" height="244" alt="" decoding="async" style="left:14.133%;top:29.7%;width:72.133%;height:24.4%;--ox:41.54%;--oy:52.46%"><span class="ps-glint" data-zone="hood" aria-hidden="true" style="left:14.133%;top:29.7%;width:72.133%;height:24.4%;-webkit-mask-image:url(assets/repair/honda-hood-damage.webp);mask-image:url(assets/repair/honda-hood-damage.webp)"></span><img class="ps-patch" data-zone="grille" src="assets/repair/honda-grille-damage.webp" width="1137" height="257" alt="" decoding="async" style="left:12.8%;top:42.6%;width:75.8%;height:25.7%;--ox:15.83%;--oy:34.24%"><span class="ps-glint" data-zone="grille" aria-hidden="true" style="left:12.8%;top:42.6%;width:75.8%;height:25.7%;-webkit-mask-image:url(assets/repair/honda-grille-damage.webp);mask-image:url(assets/repair/honda-grille-damage.webp)"></span>
             <span class="ps-flash" aria-hidden="true"></span>
-            <div class="hotspots"><button class="hs" type="button" data-zone="windshield" aria-pressed="false" style="left:46%;top:19%"><span class="visually-hidden">Repair windshield</span><span class="tip">Windshield</span></button><button class="hs" type="button" data-zone="hood" aria-pressed="false" style="left:44.7%;top:39.5%"><span class="visually-hidden">Repair hood</span><span class="tip">Hood</span></button><button class="hs" type="button" data-zone="grille" aria-pressed="false" style="left:30.4%;top:52.5%"><span class="visually-hidden">Repair front end</span><span class="tip">Front end</span></button></div>
+            <div class="hotspots"><button class="hs" type="button" data-zone="windshield" aria-pressed="false" style="left:50%;top:21%"><span class="visually-hidden">Repair windshield</span><span class="tip">Windshield</span></button><button class="hs" type="button" data-zone="hood" aria-pressed="false" style="left:44.1%;top:42.5%"><span class="visually-hidden">Repair hood</span><span class="tip">Hood</span></button><button class="hs" type="button" data-zone="grille" aria-pressed="false" style="left:24.8%;top:51.4%"><span class="visually-hidden">Repair hood edge and grille</span><span class="tip">Hood edge and grille</span></button></div>
             <p class="ps-tag" aria-hidden="true"><span class="ps-tag-dot"></span><span class="ps-tag-txt">As it came in</span></p>
           </div>
           <div class="repair-bar">
@@ -669,16 +671,16 @@ h3{font-size:clamp(1.15rem,2vw,1.45rem);font-weight:800;letter-spacing:-.01em}
             <p>Tap a glowing marker on the photo, or choose a panel from the list. Tap it again to bring the damage back and compare.</p>
             <noscript><p>Turn on JavaScript to repair the car.</p></noscript>
           </div>
-          <ul class="zone-list"><li><button class="zone-chip" type="button" data-zone="windshield" aria-pressed="false" data-name="Windshield" data-dmg="Cracked and wrapped in plastic" data-fix="Cracked glass cut out and a new windshield set in urethane. Any camera behind the mirror is recalibrated so the safety systems work like they should." data-href="collision-repair.html" data-link="How we handle collision repair"><span class="z-dot" aria-hidden="true"></span><span class="z-text"><span class="z-name">Windshield</span><span class="z-state">Cracked and wrapped in plastic</span></span></button></li><li><button class="zone-chip" type="button" data-zone="hood" aria-pressed="false" data-name="Hood" data-dmg="Folded in the middle" data-fix="Hood replaced, painted with computer matched PPG color and blended into the fenders so the whole front reads as one color." data-href="auto-painting.html" data-link="How we match paint"><span class="z-dot" aria-hidden="true"></span><span class="z-text"><span class="z-name">Hood</span><span class="z-state">Folded in the middle</span></span></button></li><li><button class="zone-chip" type="button" data-zone="grille" aria-pressed="false" data-name="Front end" data-dmg="Hood edge crushed, grille trim bent" data-fix="Upper grille and chrome trim replaced, headlights reset, and the hood gaps set even with the fenders before anything gets painted." data-href="collision-repair.html" data-link="How we handle collision repair"><span class="z-dot" aria-hidden="true"></span><span class="z-text"><span class="z-name">Front end</span><span class="z-state">Hood edge crushed, grille trim bent</span></span></button></li></ul>
+          <ul class="zone-list"><li><button class="zone-chip" type="button" data-zone="windshield" aria-pressed="false" data-name="Windshield" data-dmg="Cracked and wrapped in plastic" data-fix="Cracked glass cut out and a new windshield set in urethane. Any camera behind the mirror is recalibrated so the safety systems work like they should." data-href="collision-repair.html" data-link="How we handle collision repair"><span class="z-dot" aria-hidden="true"></span><span class="z-text"><span class="z-name">Windshield</span><span class="z-state">Cracked and wrapped in plastic</span></span></button></li><li><button class="zone-chip" type="button" data-zone="hood" aria-pressed="false" data-name="Hood" data-dmg="Folded in the middle" data-fix="Hood replaced, painted with computer matched PPG color and blended into the fenders so the whole front reads as one color." data-href="auto-painting.html" data-link="How we match paint"><span class="z-dot" aria-hidden="true"></span><span class="z-text"><span class="z-name">Hood</span><span class="z-state">Folded in the middle</span></span></button></li><li><button class="zone-chip" type="button" data-zone="grille" aria-pressed="false" data-name="Hood edge and grille" data-dmg="Front edge crushed, chrome trim bent" data-fix="Upper grille and chrome trim replaced, headlights reset, and the hood gaps set even with the fenders before anything gets painted." data-href="collision-repair.html" data-link="How we handle collision repair"><span class="z-dot" aria-hidden="true"></span><span class="z-text"><span class="z-name">Hood edge and grille</span><span class="z-state">Front edge crushed, chrome trim bent</span></span></button></li></ul>
         </div>
       </div>
       <div class="car-panel" role="tabpanel" id="panel-jeep" aria-labelledby="tab-jeep" data-car="jeep" hidden>
         <div class="car-stage">
           <div class="photo-stage">
-            <img class="ps-base" src="assets/repair/jeep-before.jpg" width="1500" height="1000" alt="White Jeep Grand Cherokee after a rear corner hit, with the bumper corner torn loose and the bumper face scraped through the paint" loading="lazy">
-            <img class="ps-patch" data-zone="corner" src="assets/repair/jeep-corner.webp" width="283" height="287" alt="" decoding="async" loading="lazy" style="left:51.733%;top:57.2%;width:18.867%;height:28.7%;--ox:43.82%;--oy:57.84%"><span class="ps-glint" data-zone="corner" aria-hidden="true" style="left:51.733%;top:57.2%;width:18.867%;height:28.7%;-webkit-mask-image:url(assets/repair/jeep-corner.webp);mask-image:url(assets/repair/jeep-corner.webp)"></span><img class="ps-patch" data-zone="bumper" src="assets/repair/jeep-bumper.webp" width="258" height="269" alt="" decoding="async" loading="lazy" style="left:66.4%;top:59.2%;width:17.2%;height:26.9%;--ox:50.0%;--oy:25.28%"><span class="ps-glint" data-zone="bumper" aria-hidden="true" style="left:66.4%;top:59.2%;width:17.2%;height:26.9%;-webkit-mask-image:url(assets/repair/jeep-bumper.webp);mask-image:url(assets/repair/jeep-bumper.webp)"></span>
+            <img class="ps-base" src="assets/repair/jeep-after.jpg" width="1500" height="1000" alt="White Jeep Grand Cherokee after a rear corner hit, with the bumper corner torn loose and the bumper face scraped through the paint">
+            <img class="ps-patch" data-zone="corner" src="assets/repair/jeep-corner-damage.webp" width="264" height="265" alt="" decoding="async" style="left:46.333%;top:53.1%;width:17.6%;height:26.5%;--ox:39.59%;--oy:56.23%"><span class="ps-glint" data-zone="corner" aria-hidden="true" style="left:46.333%;top:53.1%;width:17.6%;height:26.5%;-webkit-mask-image:url(assets/repair/jeep-corner-damage.webp);mask-image:url(assets/repair/jeep-corner-damage.webp)"></span><img class="ps-patch" data-zone="bumper" src="assets/repair/jeep-bumper-damage.webp" width="269" height="252" alt="" decoding="async" style="left:59.267%;top:54.7%;width:17.933%;height:25.2%;--ox:41.45%;--oy:26.98%"><span class="ps-glint" data-zone="bumper" aria-hidden="true" style="left:59.267%;top:54.7%;width:17.933%;height:25.2%;-webkit-mask-image:url(assets/repair/jeep-bumper-damage.webp);mask-image:url(assets/repair/jeep-bumper-damage.webp)"></span>
             <span class="ps-flash" aria-hidden="true"></span>
-            <div class="hotspots"><button class="hs" type="button" data-zone="corner" aria-pressed="false" style="left:60%;top:73.8%"><span class="visually-hidden">Repair bumper corner</span><span class="tip">Bumper corner</span></button><button class="hs" type="button" data-zone="bumper" aria-pressed="false" style="left:75%;top:66%"><span class="visually-hidden">Repair bumper face</span><span class="tip">Bumper face</span></button></div>
+            <div class="hotspots"><button class="hs" type="button" data-zone="corner" aria-pressed="false" style="left:53.3%;top:68%"><span class="visually-hidden">Repair bumper corner</span><span class="tip">Bumper corner</span></button><button class="hs" type="button" data-zone="bumper" aria-pressed="false" style="left:66.7%;top:61.5%"><span class="visually-hidden">Repair bumper face</span><span class="tip">Bumper face</span></button></div>
             <p class="ps-tag" aria-hidden="true"><span class="ps-tag-dot"></span><span class="ps-tag-txt">As it came in</span></p>
           </div>
           <div class="repair-bar">
@@ -1271,34 +1273,43 @@ function gsapArray(nl) { return Array.prototype.slice.call(nl); }
     var tag = panel.querySelector(".ps-tag-txt");
     var flash = panel.querySelector(".ps-flash");
     ZONES.forEach(function (z) { state[z] = false; });
+    /* hold the photo back until the damage layers are decoded, so the clean car never flashes first */
+    var imgs = [].slice.call(stage.querySelectorAll("img"));
+    var waiting = imgs.filter(function (im) { return !im.complete; });
+    if (waiting.length) {
+      stage.classList.add("is-loading");
+      var left = waiting.length, done = function () { stage.classList.remove("is-loading"); };
+      waiting.forEach(function (im) {
+        var one = function () { if (--left === 0) done(); };
+        im.addEventListener("load", one, { once: true });
+        im.addEventListener("error", one, { once: true });
+      });
+      setTimeout(done, 2500);
+    }
     function q(sel, z) { return panel.querySelector(sel + '[data-zone="' + z + '"]'); }
 
     function animate(z, fixed) {
       var img = q(".ps-patch", z), glint = q(".ps-glint", z);
-      if (!ANIMATE) {
-        img.classList.toggle("is-on", fixed);
-        img.style.removeProperty("--r");
-        return;
-      }
+      if (!ANIMATE) { img.classList.toggle("is-on", fixed); return; }
       gsap.killTweensOf([img, glint]);
       var R = radius(img);
+      var cur = img.classList.contains("is-anim") ? parseFloat(gsap.getProperty(img, "--r")) || 1 : (fixed ? 1 : R);
       img.classList.remove("is-on");
+      img.classList.add("is-anim");
       if (fixed) {
-        gsap.fromTo(img, { "--r": "0px" }, {
-          "--r": R + "px", duration: 1.15, ease: "power2.inOut",
-          onComplete: function () { img.classList.add("is-on"); img.style.removeProperty("--r"); }
+        gsap.fromTo(img, { "--r": cur + "px" }, {
+          "--r": R + "px", duration: 1.2 * (1 - cur / R), ease: "power2.inOut",
+          onComplete: function () { img.classList.remove("is-anim"); img.classList.add("is-on"); }
         });
         gsap.fromTo(glint, { opacity: 0, backgroundPosition: "120% 0" },
-          { keyframes: [{ opacity: 1, duration: .25 }, { opacity: 1, duration: .5 }, { opacity: 0, duration: .35 }],
-            delay: .75, ease: "sine.inOut" });
-        gsap.to(glint, { backgroundPosition: "-20% 0", duration: 1.1, delay: .75, ease: "power1.inOut" });
+          { keyframes: [{ opacity: 1, duration: .25 }, { opacity: 1, duration: .5 }, { opacity: 0, duration: .35 }], delay: .7, ease: "sine.inOut" });
+        gsap.to(glint, { backgroundPosition: "-20% 0", duration: 1.1, delay: .7, ease: "power1.inOut" });
       } else {
-        var cur = parseFloat(gsap.getProperty(img, "--r")) || 0;
-        gsap.fromTo(img, { "--r": (cur > 0 && cur < R ? cur : R) + "px" }, {
-          "--r": "0px", duration: .7, ease: "power2.inOut",
-          onComplete: function () { img.style.removeProperty("--r"); }
-        });
         gsap.set(glint, { opacity: 0 });
+        gsap.fromTo(img, { "--r": cur + "px" }, {
+          "--r": "1px", duration: .75 * (cur / R), ease: "power2.inOut",
+          onComplete: function () { img.classList.remove("is-anim"); }
+        });
       }
     }
 
