@@ -273,28 +273,27 @@ h3{font-size:clamp(1.15rem,2vw,1.45rem);font-weight:800;letter-spacing:-.01em}
 
 /* ---------- page styles ---------- */
 
-/* paint visualizer */
+/* paint visualizer: paint is computed per pixel on a canvas, only inside a hand made body mask */
 .viz-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:clamp(22px,3.5vw,40px);align-items:start}
-.viz-stage{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);aspect-ratio:4/3}
-.viz-stage img{width:100%;height:100%;object-fit:cover}
-.viz-tint,.viz-finish{
-  /* the photo doubles as its own luminance mask: the white body panels are the brightest
-     pixels, so the tint lands on the car and leaves the darker background alone */
-  -webkit-mask-image:url("assets/cayenne-4-scaled.jpg");mask-image:url("assets/cayenne-4-scaled.jpg");
-  -webkit-mask-size:cover;mask-size:cover;
-  -webkit-mask-position:center;mask-position:center;
-  mask-mode:luminance;
+.viz-stage{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);aspect-ratio:4/3;background:var(--bg)}
+.viz-stage img,.viz-stage canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.viz-stage canvas{opacity:0}
+.viz-stage canvas.is-on{opacity:1}
+.viz-stage canvas.is-wipe{
+  opacity:1;
+  -webkit-mask-image:linear-gradient(100deg,#000 calc(var(--p) - 22%),transparent var(--p));
+  mask-image:linear-gradient(100deg,#000 calc(var(--p) - 22%),transparent var(--p));
 }
-.viz-tint{position:absolute;inset:0;mix-blend-mode:multiply;transition:background-color .6s var(--ease-out)}
-.viz-finish{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .6s var(--ease-out)}
-.viz-finish.metallic{background:linear-gradient(115deg,rgba(255,255,255,.42) 0%,transparent 30%,rgba(255,255,255,.15) 48%,transparent 62%,rgba(255,255,255,.3) 88%);mix-blend-mode:soft-light}
-.viz-finish.pearl{background:linear-gradient(115deg,rgba(180,120,255,.25),rgba(120,220,255,.22) 45%,rgba(255,190,140,.22));mix-blend-mode:overlay}
-.viz-finish.matte{background:rgba(128,128,128,.28);backdrop-filter:saturate(.85);mix-blend-mode:normal}
+.viz-tint{position:absolute;inset:0;opacity:0;mix-blend-mode:multiply;transition:background-color .6s var(--ease-out),opacity .6s;
+  -webkit-mask-image:url("assets/paint/cayenne-paint-mask.png");mask-image:url("assets/paint/cayenne-paint-mask.png");
+  -webkit-mask-size:100% 100%;mask-size:100% 100%;mask-mode:luminance}
+.viz-stage.no-canvas .viz-tint{opacity:1}
+.viz-stage.no-canvas canvas{display:none}
 .viz-name{position:absolute;left:14px;bottom:14px;background:rgba(13,14,16,.78);border:1px solid var(--line-strong);padding:8px 14px;border-radius:8px;font-size:.85rem;font-weight:700}
 .viz-panel h3{font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin:22px 0 12px;font-weight:700}
 .viz-panel h3:first-child{margin-top:0}
 .swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:34px 10px}
-.swatch{aspect-ratio:1;border-radius:12px;border:2px solid var(--line);position:relative;transition:transform .3s var(--ease-out),border-color .3s;display:block}
+.swatch{aspect-ratio:1;border-radius:12px;border:2px solid var(--line);background:var(--sw);position:relative;transition:transform .3s var(--ease-out),border-color .3s;display:block}
 .swatch:hover{transform:translateY(-3px)}
 .swatch[aria-pressed="true"]{border-color:var(--accent-bright);box-shadow:0 0 0 3px var(--accent-glow)}
 .swatch span{position:absolute;left:50%;bottom:-22px;translate:-50% 0;font-size:.62rem;color:var(--faint);white-space:nowrap;letter-spacing:.04em}
@@ -429,32 +428,31 @@ h3{font-size:clamp(1.15rem,2vw,1.45rem);font-weight:800;letter-spacing:-.01em}
     </div>
     <div class="widget" data-reveal>
       <div class="viz-grid">
-        <div class="viz-stage">
-          <img src="assets/cayenne-4-scaled.jpg" alt="White Porsche Cayenne used to preview paint colors" width="1600" height="1200">
+        <div class="viz-stage" id="viz-stage">
+          <img src="assets/paint/cayenne.jpg" id="viz-photo" alt="White Porsche Cayenne from our lot, used to preview paint colors" width="1600" height="1200">
+          <canvas id="viz-a" width="1600" height="1200" aria-hidden="true"></canvas>
+          <canvas id="viz-b" width="1600" height="1200" aria-hidden="true"></canvas>
           <div class="viz-tint" id="viz-tint" aria-hidden="true"></div>
-          <div class="viz-finish metallic" id="fin-metallic" aria-hidden="true"></div>
-          <div class="viz-finish pearl" id="fin-pearl" aria-hidden="true"></div>
-          <div class="viz-finish matte" id="fin-matte" aria-hidden="true"></div>
           <p class="viz-name" id="viz-name" aria-live="polite">Factory White &middot; Gloss</p>
         </div>
         <div class="viz-panel">
           <h3 id="swatch-label">Color</h3>
           <div class="swatches" role="group" aria-labelledby="swatch-label" id="swatches">
-            <button class="swatch" style="background:#f4f4f2" data-color="transparent" data-name="Factory White" aria-pressed="true"><span>Factory White</span></button>
-            <button class="swatch" style="background:#B01E24" data-color="rgba(176,30,36,.9)" data-name="Torch Red" aria-pressed="false"><span>Torch Red</span></button>
-            <button class="swatch" style="background:#1F3F77" data-color="rgba(31,63,119,.92)" data-name="Marine Blue" aria-pressed="false"><span>Marine Blue</span></button>
-            <button class="swatch" style="background:#1E4633" data-color="rgba(30,70,51,.92)" data-name="British Green" aria-pressed="false"><span>British Green</span></button>
-            <button class="swatch" style="background:#8f9499" data-color="rgba(143,148,153,.75)" data-name="Titanium Silver" aria-pressed="false"><span>Titanium Silver</span></button>
-            <button class="swatch" style="background:#3a3d42" data-color="rgba(58,61,66,.88)" data-name="Gunmetal" aria-pressed="false"><span>Gunmetal</span></button>
-            <button class="swatch" style="background:#151517" data-color="rgba(21,21,23,.9)" data-name="Midnight Black" aria-pressed="false"><span>Midnight Black</span></button>
-            <button class="swatch" style="background:#C87A2F" data-color="rgba(200,122,47,.85)" data-name="Copper Sunset" aria-pressed="false"><span>Copper Sunset</span></button>
+            <button class="swatch" type="button" style="--sw:#F2F1EC" data-name="Factory White" aria-pressed="true"><span>Factory White</span></button>
+            <button class="swatch" type="button" style="--sw:#B3121B" data-name="Torch Red" aria-pressed="false"><span>Torch Red</span></button>
+            <button class="swatch" type="button" style="--sw:#1C3F7A" data-name="Marine Blue" aria-pressed="false"><span>Marine Blue</span></button>
+            <button class="swatch" type="button" style="--sw:#1D4A35" data-name="British Green" aria-pressed="false"><span>British Green</span></button>
+            <button class="swatch" type="button" style="--sw:#A7ADB3" data-name="Titanium Silver" aria-pressed="false"><span>Titanium Silver</span></button>
+            <button class="swatch" type="button" style="--sw:#4A4F56" data-name="Gunmetal" aria-pressed="false"><span>Gunmetal</span></button>
+            <button class="swatch" type="button" style="--sw:#141518" data-name="Midnight Black" aria-pressed="false"><span>Midnight Black</span></button>
+            <button class="swatch" type="button" style="--sw:#B8692E" data-name="Copper Sunset" aria-pressed="false"><span>Copper Sunset</span></button>
           </div>
           <h3 id="finish-label">Finish</h3>
           <div class="chip-row" role="group" aria-labelledby="finish-label" id="finishes">
-            <button class="chip" data-finish="gloss" aria-pressed="true">Gloss</button>
-            <button class="chip" data-finish="metallic" aria-pressed="false">Metallic</button>
-            <button class="chip" data-finish="pearl" aria-pressed="false">Pearl</button>
-            <button class="chip" data-finish="matte" aria-pressed="false">Matte</button>
+            <button class="chip" type="button" data-finish="gloss" aria-pressed="true">Gloss</button>
+            <button class="chip" type="button" data-finish="metallic" aria-pressed="false">Metallic</button>
+            <button class="chip" type="button" data-finish="pearl" aria-pressed="false">Pearl</button>
+            <button class="chip" type="button" data-finish="matte" aria-pressed="false">Matte</button>
           </div>
         </div>
       </div>
@@ -708,30 +706,132 @@ function gsapArray(nl) { return Array.prototype.slice.call(nl); }
 
 /* paint visualizer */
 (function () {
+  var stage = document.getElementById("viz-stage");
+  if (!stage) return;
+  var photo = document.getElementById("viz-photo");
+  var cA = document.getElementById("viz-a"), cB = document.getElementById("viz-b");
   var tint = document.getElementById("viz-tint");
-  if (!tint) return;
   var nameOut = document.getElementById("viz-name");
   var swatches = gsapArray(document.querySelectorAll("#swatches .swatch"));
   var chips = gsapArray(document.querySelectorAll("#finishes .chip"));
-  var finishes = { metallic: document.getElementById("fin-metallic"), pearl: document.getElementById("fin-pearl"), matte: document.getElementById("fin-matte") };
-  var state = { name: "Factory White", finish: "Gloss" };
-  function label() { nameOut.textContent = state.name + " \u00B7 " + state.finish; }
+  var state = { name: "Factory White", hex: swatches[0].style.getPropertyValue("--sw").trim(), finish: "gloss" };
+  var W = cA.width, H = cA.height, ready = false, model = null, busy = null;
+
+  /* sRGB <-> linear lookup tables */
+  var toLin = new Float32Array(256), toSrgb = new Uint8ClampedArray(4097);
+  for (var i = 0; i < 256; i++) { var c = i / 255; toLin[i] = c <= .04045 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); }
+  for (i = 0; i <= 4096; i++) { var l = i / 4096; toSrgb[i] = 255 * (l <= .0031308 ? l * 12.92 : 1.055 * Math.pow(l, 1 / 2.4) - .055) + .5; }
+  function enc(v) { return toSrgb[v <= 0 ? 0 : v >= 1 ? 4096 : (v * 4096) | 0]; }
+  function hexLin(h) { h = h.replace("#", ""); return [0, 2, 4].map(function (k) { return toLin[parseInt(h.substr(k, 2), 16)]; }); }
+  function sstep(a, b, x) { var t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); }
+  /* pearl: shift hue a touch and lift lightness for the flip tone */
+  function pearlTone(C) {
+    var r = C[0], g = C[1], b = C[2], mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn, h = 0;
+    if (d) h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+    h = (h * 60 + 16 + 360) % 360;
+    var L = Math.min(1, (mx + mn) / 2 * 1.35 + .03), S = d ? d / (1 - Math.abs(mx + mn - 1)) * .9 : 0;
+    var q = (1 - Math.abs(2 * L - 1)) * S, x = q * (1 - Math.abs((h / 60) % 2 - 1)), m = L - q / 2;
+    var o = h < 60 ? [q, x, 0] : h < 120 ? [x, q, 0] : h < 180 ? [0, q, x] : h < 240 ? [0, x, q] : h < 300 ? [x, 0, q] : [q, 0, x];
+    return [o[0] + m, o[1] + m, o[2] + m];
+  }
+
+  function load(img) {
+    return new Promise(function (res, rej) {
+      if (img.complete && img.naturalWidth) return res(img);
+      img.addEventListener("load", function () { res(img); }, { once: true });
+      img.addEventListener("error", rej, { once: true });
+    });
+  }
+
+  function build(maskImg) {
+    var cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+    var x = cv.getContext("2d");
+    x.drawImage(photo, 0, 0, W, H);
+    var src = x.getImageData(0, 0, W, H); /* throws on file:// hosts, caught below */
+    x.clearRect(0, 0, W, H); x.drawImage(maskImg, 0, 0, W, H);
+    var mk = x.getImageData(0, 0, W, H).data, px = src.data;
+    var n = 0, p;
+    for (p = 0; p < W * H; p++) if (mk[p * 4] > 2) n++;
+    var idx = new Int32Array(n), al = new Float32Array(n), dd = new Float32Array(n), ss = new Float32Array(n), nz = new Float32Array(n);
+    var seed = 7, k = 0;
+    for (p = 0; p < W * H; p++) {
+      if (mk[p * 4] <= 2) continue;
+      var o = p * 4;
+      var Y = .2126 * toLin[px[o]] + .7152 * toLin[px[o + 1]] + .0722 * toLin[px[o + 2]];
+      idx[k] = o; al[k] = mk[o] / 255;
+      dd[k] = Math.pow(Math.min(1, Y / .82), .92);
+      ss[k] = sstep(.8, 1, Y);
+      seed = (seed * 16807) % 2147483647; nz[k] = (seed / 2147483647) * 2 - 1;
+      k++;
+    }
+    return { src: src, idx: idx, al: al, d: dd, s: ss, nz: nz };
+  }
+
+  function render(ctx, hex, fin) {
+    var out = new ImageData(new Uint8ClampedArray(model.src.data), W, H), o8 = out.data;
+    var C = hexLin(hex), C2 = fin === "pearl" ? pearlTone(C) : C;
+    var g = (C[0] + C[1] + C[2]) / 3;
+    for (var k = 0; k < model.idx.length; k++) {
+      var d = model.d[k], s = model.s[k], o = model.idx[k], a = model.al[k], r, gg, b, t, sh, add;
+      if (fin === "matte") {
+        sh = .22 + .78 * Math.pow(d, 1.2); add = s * .02;
+        r = (C[0] * .88 + g * .12) * sh + add; gg = (C[1] * .88 + g * .12) * sh + add; b = (C[2] * .88 + g * .12) * sh + add;
+      } else if (fin === "metallic") {
+        sh = Math.pow(d, 2) * (1 + .1 * model.nz[k]); t = .35 * Math.pow(d, 8); add = .02 * d * d * d + s * .17;
+        r = C[0] * (sh + t) + add; gg = C[1] * (sh + t) + add; b = C[2] * (sh + t) + add;
+      } else {
+        sh = Math.pow(d, 1.8); add = .02 * d * d * d + s * .14;
+        t = fin === "pearl" ? Math.min(1, Math.max(0, (d - .55) * 1.6)) * .45 : 0;
+        r = (C[0] * (1 - t) + C2[0] * t) * sh + add; gg = (C[1] * (1 - t) + C2[1] * t) * sh + add; b = (C[2] * (1 - t) + C2[2] * t) * sh + add;
+      }
+      o8[o] = o8[o] + (enc(r) - o8[o]) * a;
+      o8[o + 1] = o8[o + 1] + (enc(gg) - o8[o + 1]) * a;
+      o8[o + 2] = o8[o + 2] + (enc(b) - o8[o + 2]) * a;
+    }
+    ctx.putImageData(out, 0, 0);
+  }
+
+  function isOriginal() { return state.name === "Factory White" && state.finish === "gloss"; }
+  function label() { nameOut.textContent = state.name + " · " + state.finish.charAt(0).toUpperCase() + state.finish.slice(1); }
+
+  function show() {
+    label();
+    if (!ready) return;
+    if (!model) { tint.style.backgroundColor = isOriginal() ? "transparent" : state.hex; return; }
+    var bctx = cB.getContext("2d");
+    if (isOriginal()) bctx.drawImage(photo, 0, 0, W, H); else render(bctx, state.hex, state.finish);
+    var finish = function () {
+      var actx = cA.getContext("2d");
+      actx.clearRect(0, 0, W, H); actx.drawImage(cB, 0, 0);
+      cA.classList.add("is-on");
+      cB.classList.remove("is-wipe");
+      busy = null;
+    };
+    if (busy) busy.kill();
+    if (!ANIMATE) return finish();
+    /* the new coat sweeps across the car like a spray pass */
+    cB.classList.add("is-wipe");
+    busy = gsap.fromTo(cB, { "--p": "0%" }, { "--p": "125%", duration: 1.05, ease: "power2.inOut", onComplete: finish });
+  }
+
+  Promise.all([load(photo), load(Object.assign(new Image(), { src: "assets/paint/cayenne-paint-mask.png" }))]).then(function (imgs) {
+    try { model = build(imgs[1]); } catch (e) { model = null; stage.classList.add("no-canvas"); }
+    ready = true;
+    if (!isOriginal()) show();
+  }).catch(function () { stage.classList.add("no-canvas"); ready = true; });
+
   swatches.forEach(function (b) {
     b.addEventListener("click", function () {
       swatches.forEach(function (o) { o.setAttribute("aria-pressed", String(o === b)); });
-      tint.style.backgroundColor = b.dataset.color;
-      state.name = b.dataset.name;
-      if (ANIMATE) gsap.fromTo(tint, { opacity: 0.55 }, { opacity: 1, duration: 0.7, ease: "power2.out" });
-      label();
+      state.name = b.dataset.name; state.hex = b.style.getPropertyValue("--sw").trim();
+      show();
     });
   });
   chips.forEach(function (c) {
     c.addEventListener("click", function () {
       chips.forEach(function (o) { o.setAttribute("aria-pressed", String(o === c)); });
-      var f = c.dataset.finish;
-      Object.keys(finishes).forEach(function (k) { finishes[k].style.opacity = (k === f) ? "1" : "0"; });
-      state.finish = c.textContent;
-      label();
+      state.finish = c.dataset.finish;
+      show();
     });
   });
 })();
